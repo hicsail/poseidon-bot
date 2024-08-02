@@ -5,8 +5,8 @@ from . import crud, models, schemas
 from .database import SessionLocal, engine
 from .embeddings import LlamaEmbeddingFunction
 import chromadb
-
 from embeddings import LlamaEmbeddingFunction
+app = FastAPI()
 
 def main():
     documents = ["Hello world", "Chroma is great for embeddings"]
