@@ -1,7 +1,19 @@
+import chromadb
+
 from sqlalchemy.orm import Session
 
 from . import models, schemas
 
+chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+
+
+def add_document(document: str, doc_id: str):
+    collection = chroma_client.get_or_create_collection(name="my_collection")
+    collection.add(documents=[document], ids=[doc_id])
+
+def get_documents():
+    collection = chroma_client.get_or_create_collection(name="my_collection")
+    return collection.peek()
 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()

@@ -1,5 +1,7 @@
 from pydantic import BaseModel
+import chromadb
 
+chroma_client = chromadb.HttpClient(host='localhost', port=8000)
 class MessageBase(BaseModel):
     title: str
     message: str | None = None

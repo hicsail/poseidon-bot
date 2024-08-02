@@ -4,10 +4,21 @@ from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+import chromadb
 
-models.Base.metadata.create_all(bind=engine)
+client = chromadb.PersistentClient(path="backend/temp.data")
 
-app = FastAPI()
+client.heartbeat()
+
+
+@app.on_event("startup")
+async def startup_event():
+    chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+    collection = chroma_client.get_or_create_collection(name="my_collection")
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
 def get_db():
     db = SessionLocal()
