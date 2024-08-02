@@ -1,10 +1,21 @@
 from typing import Union
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+from .embeddings import LlamaEmbeddingFunction
 import chromadb
+
+from embeddings import LlamaEmbeddingFunction
+
+def main():
+    documents = ["Hello world", "Chroma is great for embeddings"]
+    embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
+    embeddings = embedding_function(documents)
+    print(embeddings)
+
+if __name__ == "__main__":
+    main()
 
 client = chromadb.PersistentClient(path="backend/temp.data")
 
