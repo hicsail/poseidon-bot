@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from typing import Union
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-import crud, models, schemas, database
+from . import crud, models, schemas, database
 
 # from .embeddings import LlamaEmbeddingFunction
 import chromadb
