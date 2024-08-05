@@ -1,9 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from backend.database import Base
 from sqlalchemy.orm import relationship
-import chromadb
 
-chroma_client = chromadb.HttpClient(host='localhost', port=8000)
 class User(Base):
     __tablename__ = "users"
 
