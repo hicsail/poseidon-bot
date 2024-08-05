@@ -24,7 +24,7 @@ def main():
     chroma_client = chromadb.HttpClient(host='localhost', port=8000)
     collection = chroma_client.get_or_create_collection(name="my_collection")
     collection.add(documents=documents)
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()
 
 client = chromadb.PersistentClient(path="backend/temp.data")
