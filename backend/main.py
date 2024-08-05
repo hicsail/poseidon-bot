@@ -2,21 +2,28 @@ from contextlib import asynccontextmanager
 from typing import Union
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-from . import crud, models, schemas
-from .database import SessionLocal, engine
-from .embeddings import LlamaEmbeddingFunction
-import chromadb
-from embeddings import LlamaEmbeddingFunction
+import crud, models, schemas, database
 
-models.Base.metadata.create_all(bind=engine)
+# from .embeddings import LlamaEmbeddingFunction
+import chromadb
+# from chromadb.server import Server
+# from embeddings import LlamaEmbeddingFunction
+
+models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
 
 def main():
     documents = ["Hello world", "Chroma is great for embeddings"]
-    embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
-    embeddings = embedding_function(documents)
-    print(embeddings)
+    # embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
+    # embeddings = embedding_function(documents)
+    # print(embeddings)      
 
+    # server = Server(host='localhost', port=8000)
+    # server.start()
+
+    chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+    collection = chroma_client.get_or_create_collection(name="my_collection")
+    collection.add(documents=documents)
 if __name__ == "__main__":
     main()
 
@@ -24,16 +31,17 @@ client = chromadb.PersistentClient(path="backend/temp.data")
  
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    chroma_client = chromadb.HttpClient(host='localhost', port=8000)
-    collection = chroma_client.get_or_create_collection(name="my_collection")
-
+    try:
+        yield
+    finally:
+        await client.close()
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 def get_db():
-    db = SessionLocal()
+    db = database.SessionLocal()
     try:
         yield db
     finally:
