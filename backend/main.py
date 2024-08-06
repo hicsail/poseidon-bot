@@ -2,38 +2,63 @@ from contextlib import asynccontextmanager
 from typing import Union
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-from . import crud, models, schemas
-from .database import SessionLocal, engine
-from .embeddings import LlamaEmbeddingFunction
+# import crud, models, schemas, database
+from . import crud, models, schemas, database
+from flask import request, jsonify
+
+
+# from .embeddings import LlamaEmbeddingFunction
 import chromadb
-from embeddings import LlamaEmbeddingFunction
+# from chromadb.server import Server
+# from embeddings import LlamaEmbeddingFunction
 
-models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
-
+chroma_client = chromadb.Client()
 def main():
     documents = ["Hello world", "Chroma is great for embeddings"]
-    embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
-    embeddings = embedding_function(documents)
-    print(embeddings)
+    # embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
+    # embeddings = embedding_function(documents)
+    # print(embeddings)      
 
+    # server = Server(host='localhost', port=8000)
+    # server.start()
+
+    chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+    collection = chroma_client.get_or_create_collection(name="my_collection")
+    collection.add(documents=documents, ids=['0', '1'])
 if __name__ == "__main__":
     main()
 
-client = chromadb.PersistentClient(path="backend/temp.data")
+# client = chromadb.PersistentClient(path="backend/temp.data")
  
+@app.route('/query', methods=['POST'])
+def query():
+    data = request.json
+    query_text = data.get('query')
+
+    chroma_result = chroma_client.query(query_text)
+
+    return jsonify({
+        'chroma_result': chroma_result,
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)
+    
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    chroma_client = chromadb.HttpClient(host='localhost', port=8000)
-    collection = chroma_client.get_or_create_collection(name="my_collection")
-
+    try:
+        yield
+    finally:
+        await chroma_client.close()
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 def get_db():
-    db = SessionLocal()
+    db = database.SessionLocal()
     try:
         yield db
     finally:
