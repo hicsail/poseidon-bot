@@ -54,3 +54,92 @@
 [32mINFO[0m:     [05-08-2024 11:46:47] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
 [32mINFO[0m:     [05-08-2024 12:13:38] ::1:51642 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
 [32mINFO[0m:     [05-08-2024 12:13:38] ::1:51642 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[33mWARNING[0m:  [06-08-2024 11:36:04] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048575. chroma_server_nofile will not be set.
+[32mINFO[0m:     [06-08-2024 11:36:05] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [06-08-2024 11:36:05] Starting component System
+[36mDEBUG[0m:    [06-08-2024 11:36:05] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [06-08-2024 11:36:05] Starting component SqliteDB
+[36mDEBUG[0m:    [06-08-2024 11:36:05] Starting component QuotaEnforcer
+[36mDEBUG[0m:    [06-08-2024 11:36:05] Starting component Posthog
+[36mDEBUG[0m:    [06-08-2024 11:36:05] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [06-08-2024 11:36:05] Starting component SegmentAPI
+[32mINFO[0m:     [06-08-2024 11:36:05] Started server process [[36m6717[0m]
+[32mINFO[0m:     [06-08-2024 11:36:05] Waiting for application startup.
+[32mINFO[0m:     [06-08-2024 11:36:05] Application startup complete.
+[32mINFO[0m:     [06-08-2024 11:36:05] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [06-08-2024 11:36:16] ::1:51440 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:36:16] ::1:51440 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:40:48] ::1:51478 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:40:48] ::1:51478 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:41:08] ::1:51486 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:41:08] ::1:51486 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:43:07] ::1:51497 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:43:07] ::1:51497 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:45:21] ::1:51508 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:45:21] ::1:51508 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:08] ::1:51515 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:08] ::1:51515 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:10] ::1:51521 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:10] ::1:51521 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:10] ::1:51522 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:53] ::1:51542 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:53] ::1:51542 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:54] ::1:51546 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:47:54] ::1:51546 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [06-08-2024 11:47:54] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [06-08-2024 11:47:54] ::1:51547 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:48:11] ::1:51553 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:48:11] ::1:51553 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:48:12] ::1:51557 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:48:12] ::1:51557 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [06-08-2024 11:48:12] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [06-08-2024 11:48:12] ::1:51558 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:48:20] ::1:51561 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[36mDEBUG[0m:    [06-08-2024 11:48:20] Starting component PersistentLocalHnswSegment
+[32mINFO[0m:     [06-08-2024 11:48:20] ::1:51561 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [06-08-2024 11:49:54] ::1:51569 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:49:54] ::1:51569 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:49:55] ::1:51574 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:49:55] ::1:51574 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [06-08-2024 11:49:55] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [06-08-2024 11:49:55] ::1:51575 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:49:56] ::1:51575 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [06-08-2024 11:49:56] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [06-08-2024 11:49:56] Insert of existing embedding ID: 1
+[33mWARNING[0m:  [06-08-2024 11:49:56] Add of existing embedding ID: 0
+[33mWARNING[0m:  [06-08-2024 11:49:56] Add of existing embedding ID: 1
+[32mINFO[0m:     [06-08-2024 11:49:56] ::1:51575 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [06-08-2024 11:50:07] ::1:51592 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:50:07] ::1:51592 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:50:08] ::1:51596 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:50:08] ::1:51596 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [06-08-2024 11:50:08] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [06-08-2024 11:50:08] ::1:51597 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:50:08] ::1:51597 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [06-08-2024 11:50:08] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [06-08-2024 11:50:08] Insert of existing embedding ID: 1
+[33mWARNING[0m:  [06-08-2024 11:50:08] Add of existing embedding ID: 0
+[33mWARNING[0m:  [06-08-2024 11:50:08] Add of existing embedding ID: 1
+[32mINFO[0m:     [06-08-2024 11:50:08] ::1:51597 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [06-08-2024 11:56:20] ::1:51654 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:56:20] ::1:51654 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:58:23] ::1:51699 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:58:23] ::1:51699 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:58:26] ::1:51705 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 11:58:26] ::1:51705 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:11:48] ::1:51821 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:11:48] ::1:51821 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:15:26] ::1:51857 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:15:26] ::1:51857 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:17:27] ::1:51935 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:17:27] ::1:51935 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:35:12] ::1:52028 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:35:12] ::1:52028 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:36:59] ::1:52072 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:36:59] ::1:52072 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:37:26] ::1:52077 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:37:26] ::1:52077 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:37:30] ::1:52084 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:37:30] ::1:52084 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:37:46] ::1:52091 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [06-08-2024 12:37:46] ::1:52091 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200

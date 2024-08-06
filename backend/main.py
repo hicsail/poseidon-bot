@@ -2,7 +2,8 @@ from contextlib import asynccontextmanager
 from typing import Union
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-import crud, models, schemas, database
+# import crud, models, schemas, database
+from . import crud, models, schemas, database
 
 # from .embeddings import LlamaEmbeddingFunction
 import chromadb
@@ -23,11 +24,11 @@ def main():
 
     chroma_client = chromadb.HttpClient(host='localhost', port=8000)
     collection = chroma_client.get_or_create_collection(name="my_collection")
-    collection.add(documents=documents)
+    collection.add(documents=documents, ids=['0', '1'])
 if __name__ == "__main__":
     main()
 
-client = chromadb.PersistentClient(path="backend/temp.data")
+# client = chromadb.PersistentClient(path="backend/temp.data")
  
 @asynccontextmanager
 async def lifespan(app: FastAPI):

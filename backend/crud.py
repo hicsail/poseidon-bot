@@ -2,7 +2,7 @@ import chromadb
 
 from sqlalchemy.orm import Session
 
-import models, schemas
+from . import models, schemas
 
 chroma_client = chromadb.HttpClient(host='localhost', port=8000)
 
