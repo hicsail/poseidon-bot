@@ -4,6 +4,9 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 # import crud, models, schemas, database
 from . import crud, models, schemas, database
+from llama_index import LLamaIndex
+from flask import Flask, request, jsonify
+
 
 # from .embeddings import LlamaEmbeddingFunction
 import chromadb
@@ -12,7 +15,8 @@ import chromadb
 
 models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
-
+chroma_client = chromadb.Client()
+llama_index = LLamaIndex()
 def main():
     documents = ["Hello world", "Chroma is great for embeddings"]
     # embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
@@ -30,6 +34,23 @@ if __name__ == "__main__":
 
 # client = chromadb.PersistentClient(path="backend/temp.data")
  
+@app.route('/query', methods=['POST'])
+def query():
+    data = request.json
+    query_text = data.get('query')
+
+    chroma_result = chroma_client.query(query_text)
+    
+    llama_result = llama_index.query(query_text)
+
+    return jsonify({
+        'chroma_result': chroma_result,
+        'llama_result': llama_result
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)
+    
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
