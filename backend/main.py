@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 # import crud, models, schemas, database
 from . import crud, models, schemas, database
 from flask import request, jsonify
-
+import ollama
 
 # from .embeddings import LlamaEmbeddingFunction
 import chromadb
@@ -15,18 +15,21 @@ import chromadb
 models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
 chroma_client = chromadb.Client()
+
+documents = ["Hello world", "Chroma is great for embeddings"]
+chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+collection = chroma_client.get_or_create_collection(name="my_collection")
+collection.add(documents=documents, ids=['0', '1'])
+
 def main():
-    documents = ["Hello world", "Chroma is great for embeddings"]
     # embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
     # embeddings = embedding_function(documents)
     # print(embeddings)      
 
     # server = Server(host='localhost', port=8000)
     # server.start()
+    print("HI")
 
-    chroma_client = chromadb.HttpClient(host='localhost', port=8000)
-    collection = chroma_client.get_or_create_collection(name="my_collection")
-    collection.add(documents=documents, ids=['0', '1'])
 if __name__ == "__main__":
     main()
 
@@ -37,10 +40,17 @@ def query():
     data = request.json
     query_text = data.get('query')
 
-    chroma_result = chroma_client.query(query_text)
+    chroma_result = collection.query(
+        query_texts=query_text,
+        n_results=2
+    )
+    ollama_result = ollama.chat(
+        model='llama3.1',
+        messages=[{'role': 'user', 'content': chroma_result + query_text}],
+    )
 
     return jsonify({
-        'chroma_result': chroma_result,
+        'llama_result': ollama_result
     })
 
 if __name__ == '__main__':
