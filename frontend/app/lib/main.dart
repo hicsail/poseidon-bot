@@ -1,9 +1,16 @@
 import 'package:app/chatpage.dart';
 import 'package:app/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:english_words/english_words.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +26,6 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        // '/': (context) => const MyHomePage(title: 'Home'),
         '/chat': (context) => const ChatPage(),
       },
       debugShowCheckedModeBanner: false,
@@ -28,3 +34,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class MyAppState extends ChangeNotifier {
+  var current = WordPair.random();
+}
+
+class MyHomePage extends StatelessWidget {
+  final String title;
+
+  const MyHomePage({sper.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    return Scaffold(
+      appbar: AppBar(
+        title: Text(title),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center
+        children: [
+          const Text('Something Random:'),
+          Text(appState.current.asLowerCase),
+
+          ElevatedButton: () {
+            print('button pressed!');
+          },
+          child: Text('Next'),
+        ],
+      ),
+    );
+  }
+}
