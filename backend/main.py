@@ -5,9 +5,7 @@ from sqlalchemy.orm import Session
 # import crud, models, schemas, database
 from . import crud, models, schemas, database
 from flask import request, jsonify
-from chroma import VectorStore
-import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+import ollama
 
 # from .embeddings import LlamaEmbeddingFunction
 import chromadb
@@ -17,34 +15,20 @@ import chromadb
 models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
 chroma_client = chromadb.Client()
-vector_store = VectorStore.from_config({
-    "index_name": "my_index",
-    "max_vectors": 1000,
-})
-model = AutoModelForSequenceClassification.from_pretrained("llama-base-12")
-tokenizer = AutoTokenizer.from_pretrained("llama-base-12")
+
+documents = ["Hello world", "Chroma is great for embeddings"]
+chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+collection = chroma_client.get_or_create_collection(name="my_collection")
+collection.add(documents=documents, ids=['0', '1'])
 
 def main():
-    documents = ["Hello world", "Chroma is great for embeddings"]
     # embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
     # embeddings = embedding_function(documents)
     # print(embeddings)      
 
     # server = Server(host='localhost', port=8000)
     # server.start()
-
-    chroma_client = chromadb.HttpClient(host='localhost', port=8000)
-    collection = chroma_client.get_or_create_collection(name="my_collection")
-    collection.add(documents=documents, ids=['0', '1'])
-
-    test_inputs = ["Hello, world!", "This is a test.", "How are you?" ]
-    embeddings = []
-    for input in test_inputs:
-        inputs = tokenizer([input], return_tensors="pt")
-        outputs = model(**inputs)
-        embedding = outputs.last_hidden_state[:, 0, :].detach().numpy()
-        embeddings.append(embedding)
-    vector_store.add_vectors("chroma_embeddings", embeddings)
+    print("HI")
 
 if __name__ == "__main__":
     main()
@@ -56,13 +40,17 @@ def query():
     data = request.json
     query_text = data.get('query')
 
-    chroma_result = vector_store.get_closest_match(query_text)
-    llama_input = torch.tensor(chroma_result)
-    llama_result = model(llama_input)
+    chroma_result = collection.query(
+        query_texts=query_text,
+        n_results=2
+    )
+    ollama_result = ollama.chat(
+        model='llama3.1',
+        messages=[{'role': 'user', 'content': chroma_result + query_text}],
+    )
 
     return jsonify({
-        'chroma_result': chroma_result,
-        'llama_result': llama_result
+        'llama_result': ollama_result
     })
 
 if __name__ == '__main__':
