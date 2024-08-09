@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'widgets/SendButton.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -11,13 +10,34 @@ class ChatPage extends StatefulWidget {
 class ChatPageState extends State<ChatPage> {
   final List<ChatMessage> messages = []; // List to store chat messages
   final ScrollController scrollController = ScrollController();
+  final TextEditingController textController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
 
   void handleSubmitted(String text) {
+    if (text.isEmpty) return;
+
     setState(() {
       messages.add(ChatMessage(text: text, isUser: true));
       messages.add(ChatMessage(text: "This is a simulated bot response.", isUser: false));
     });
+    textController.clear();
     scrollToBottom();
+    focusNode.requestFocus();
     print(text);
   }
 
@@ -52,7 +72,25 @@ void scrollToBottom() {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SendButton(onSubmitted: handleSubmitted),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    focusNode: focusNode,
+                    controller: textController,
+                    decoration: InputDecoration(
+                      hintText: 'Type a message',
+                      border: OutlineInputBorder(),
+                    ),
+                    onSubmitted: handleSubmitted,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () => handleSubmitted(textController.text),
+                ),
+              ],
+            ),
           ),
         ],
       ),
