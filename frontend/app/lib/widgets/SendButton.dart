@@ -6,10 +6,10 @@ class SendButton extends StatefulWidget {
   const SendButton({Key? key, required this.onSubmitted}) : super(key: key);
 
   @override
-  State<SendButton> createState() => _SendButtonState();
+  State<SendButton> createState() => SendButtonState();
 }
 
-class _SendButtonState extends State<SendButton> {
+class SendButtonState extends State<SendButton> {
   final TextEditingController textController = TextEditingController();
 
   @override
@@ -22,9 +22,10 @@ class _SendButtonState extends State<SendButton> {
             child: TextField(
               controller: textController,
               onSubmitted: handleSubmitted,
-              // decoration: const InputDecoration.collapsed(
-              //   hintText: 'Message Poseidon-Bot',
-              // ),
+              decoration: InputDecoration(
+                hintText: 'Message Poseidon-Bot',
+                border: const OutlineInputBorder(),
+              ),
             ),
           ),
           Container(
