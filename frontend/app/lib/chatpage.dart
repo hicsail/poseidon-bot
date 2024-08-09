@@ -54,7 +54,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: const Color.fromARGB(255, 173, 232, 245),
         title: const Text('ChatGPT', style: TextStyle(color: Colors.white)),
       ),
       drawer: Drawer(
@@ -63,11 +63,11 @@ class _ChatPageState extends State<ChatPage> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(221, 225, 60, 60),
+                color: Color.fromARGB(255, 129, 241, 194),
               ),
               child: Text(
                 'Past Chats',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+                style: TextStyle(color: Color.fromARGB(192, 115, 115, 115), fontSize: 24),
               ),
             ),
             for (int i = 0; i < _chatSessions.length; i++)
