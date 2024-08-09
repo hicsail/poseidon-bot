@@ -8,17 +8,46 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final List<_Message> _messages = [];
+  final List<List<_Message>> _chatSessions = [[]];
+  int _currentChatIndex = 0;
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   void _handleSubmitted(String text) {
     if (text.isEmpty) return;
     setState(() {
-      _messages.add(_Message(text: text, isUser: true));
-      // For now, simulate a bot response after a delay.
-      _messages.add(_Message(text: "This is a simulated bot response.", isUser: false));
+      _chatSessions[_currentChatIndex].add(_Message(text: text, isUser: true));
+      // Simulate bot response
+      _chatSessions[_currentChatIndex].add(_Message(text: "This is a simulated bot response.", isUser: false));
     });
     _controller.clear();
+    _scrollToBottom();
+  }
+
+  void _startNewChat() {
+    setState(() {
+      _chatSessions.add([]);
+      _currentChatIndex = _chatSessions.length - 1;
+    });
+    Navigator.pop(context); // Close the drawer
+  }
+
+  void _switchChat(int index) {
+    setState(() {
+      _currentChatIndex = index;
+    });
+    Navigator.pop(context); // Close the drawer
+    _scrollToBottom();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   @override
@@ -28,15 +57,43 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: Colors.black87,
         title: const Text('ChatGPT', style: TextStyle(color: Colors.white)),
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(221, 225, 60, 60),
+              ),
+              child: Text(
+                'Past Chats',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            for (int i = 0; i < _chatSessions.length; i++)
+              ListTile(
+                title: Text('Chat ${i + 1}'),
+                onTap: () => _switchChat(i),
+              ),
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: const Text('New Chat'),
+              onTap: _startNewChat,
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(8.0),
-              reverse: true,
-              itemCount: _messages.length,
+              controller: _scrollController,
+              itemCount: _chatSessions[_currentChatIndex].length,
               itemBuilder: (context, index) {
-                return _MessageWidget(message: _messages[index]);
+                return _MessageWidget(
+                  message: _chatSessions[_currentChatIndex][index],
+                );
               },
             ),
           ),
