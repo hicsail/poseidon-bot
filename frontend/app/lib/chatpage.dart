@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -13,22 +16,79 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  void _handleSubmitted(String text) {
-    if (text.isEmpty) return;
-    setState(() {
-      _chatSessions[_currentChatIndex].add(_Message(text: text, isUser: true));
-      // Simulate bot response
-      _chatSessions[_currentChatIndex].add(_Message(text: "This is a simulated bot response.", isUser: false));
-    });
-    _controller.clear();
-    _scrollToBottom();
+  @override
+  void initState() {
+    super.initState();
+    _loadChatHistory();
   }
+
+  Future<void> _loadChatHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final chatData = prefs.getString('chat_sessions');
+    if (chatData != null) {
+      final List<dynamic> decodedData = jsonDecode(chatData);
+      setState(() {
+        _chatSessions.clear();
+        _chatSessions.addAll(decodedData.map((chat) => (chat as List<dynamic>).map((msg) => _Message.fromJson(msg)).toList()));
+      });
+    }
+  }
+
+  Future<void> _saveChatHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final chatData = jsonEncode(_chatSessions.map((chat) => chat.map((msg) => msg.toJson()).toList()).toList());
+    prefs.setString('chat_sessions', chatData);
+  }
+
+Future<void> _handleSubmitted(String text) async {
+  if (text.isEmpty) return;
+  setState(() {
+    _chatSessions[_currentChatIndex].add(_Message(text: text, isUser: true));
+  });
+  _controller.clear();
+  _scrollToBottom();
+
+  try {
+    // Replace with your Ollama API endpoint and request format
+    final response = await http.post(
+      Uri.parse('https://api.ollama.com/v1/your-endpoint'),
+      headers: {
+        'Authorization': 'Bearer YOUR_OLLAMA_API_KEY',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'prompt': text,
+        'max_tokens': 150,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final botResponse = data['response_text'];  // Adjust this according to Ollama's response format
+      setState(() {
+        _chatSessions[_currentChatIndex].add(_Message(text: botResponse, isUser: false));
+      });
+    } else {
+      setState(() {
+        _chatSessions[_currentChatIndex].add(_Message(text: 'Error: Unable to fetch response from Ollama', isUser: false));
+      });
+    }
+  } catch (e) {
+    setState(() {
+      _chatSessions[_currentChatIndex].add(_Message(text: 'Error: $e', isUser: false));
+    });
+  }
+
+  _scrollToBottom();
+  _saveChatHistory(); // Save the chat history after receiving the bot response
+}
 
   void _startNewChat() {
     setState(() {
       _chatSessions.add([]);
       _currentChatIndex = _chatSessions.length - 1;
     });
+    _saveChatHistory();
     Navigator.pop(context); // Close the drawer
   }
 
@@ -130,6 +190,16 @@ class _Message {
   final bool isUser;
 
   _Message({required this.text, required this.isUser});
+
+  Map<String, dynamic> toJson() => {
+        'text': text,
+        'isUser': isUser,
+      };
+
+  factory _Message.fromJson(Map<String, dynamic> json) => _Message(
+        text: json['text'],
+        isUser: json['isUser'],
+      );
 }
 
 class _MessageWidget extends StatelessWidget {
