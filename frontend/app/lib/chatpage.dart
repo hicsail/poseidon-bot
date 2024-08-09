@@ -55,7 +55,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 173, 232, 245),
-        title: const Text('ChatGPT', style: TextStyle(color: Colors.white)),
+        title: const Text('Poseidon Bot', style: TextStyle(color: Colors.white)),
       ),
       drawer: Drawer(
         child: ListView(
