@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'widgets/SendButton.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
+
+void handleSubmitted(String text) {
+  print("$text");
+}
 
   @override
   Widget build(BuildContext context) {
@@ -9,27 +14,18 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Chat Page'),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          const Expanded(
+            child: Center(
+            child: Text(
               'This is the chat page',
+              ),
             ),
-            Spacer(),
-            Positioned(
-              child: Align (
-                alignment: FractionalOffset.bottomCenter,
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Enter your message',
-                  ),
-                ),
-              )
-            )
-          ],
-        ),
+          ),
+          SendButton(onSubmitted: handleSubmitted),
+        ],
       ),
     );
   }
