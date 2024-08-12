@@ -51,9 +51,9 @@ Future<void> _handleSubmitted(String text) async {
   try {
     // Replace with your Ollama API endpoint and request format
     final response = await http.post(
-      Uri.parse('https://api.ollama.com/v1/your-endpoint'),
+      Uri.parse('https://api.ollama.com/v1/'),
       headers: {
-        'Authorization': 'Bearer YOUR_OLLAMA_API_KEY',
+        'Authorization': 'OLLAMA_API_KEY',
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
@@ -206,7 +206,6 @@ class _MessageWidget extends StatelessWidget {
   final _Message message;
 
   const _MessageWidget({required this.message});
-
   @override
   Widget build(BuildContext context) {
     return Container(
