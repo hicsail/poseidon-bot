@@ -108,14 +108,14 @@ def get_chats(q: str = None):
     return {"q": q}
 
 @app.post("/chats/{chat_id}")
-def create_message(chat_id: str, q: str = None):
-    #write data to database
-    return {"chat_id": chat_id, "q": q}
+def create_message(input: schemas.MessageCreate, db: Session = Depends(get_db)):
+    crud.create_message(db, input)
+    return {"chat_ttle": input.chat_id, "message": input.message}
 
 @app.post("/chats")
-def create_chat(q: str = None):
-    #write data to database
-    return {"q": q}
+def create_chat(input: schemas.ChatCreate, db: Session = Depends(get_db)):
+    chat = crud.create_user_chat(db, input)
+    return {"chat_title": input.title, "userId": input.userId, "chat_id": chat.id}
 
 @app.delete("/messages/{message_id}")
 def delete_message(message_id: str):

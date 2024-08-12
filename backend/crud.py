@@ -49,8 +49,8 @@ def get_chat(db: Session, chat_id: int):
     return db.query(models.Chat).filter(models.Chat.id == chat_id).first()
 
 
-def create_user_chat(db: Session, chat: schemas.ChatCreate, user_id: int):
-    db_chat = models.Chat(chat.title, owner_id=user_id)
+def create_user_chat(db: Session, chat: schemas.ChatCreate):
+    db_chat = models.Chat(chat.title, owner_id=chat.userId)
     db.add(db_chat)
     db.commit()
     db.refresh(db_chat)
@@ -67,8 +67,8 @@ def get_messages_in_chat(db: Session, owner_id: int, skip: int = 0, limit: int =
     return db.query(models.Message).filter(models.Message.chat_id == owner_id).offset(skip).limit(limit).all()
 
 
-def create_message(db: Session, message: schemas.MessageCreate, chat_id: int):
-    db_message = models.Message(**message.model_dump(), chat_id=chat_id)
+def create_message(db: Session, message: schemas.MessageCreate):
+    db_message = models.Message(**message.model_dump(), chat_id=message.chat_id)
     db.add(db_message)
     db.commit()
     db.refresh(db_message)

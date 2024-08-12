@@ -1,12 +1,11 @@
 from pydantic import BaseModel
 
 class MessageBase(BaseModel):
-    title: str
-    message: str | None = None
-    typeOfMessage: str | None = None
+    message: str | None
 
 
 class MessageCreate(MessageBase):
+    chat_id: int
     message: str
 
 
@@ -22,7 +21,8 @@ class ChatBase(BaseModel):
 
 
 class ChatCreate(ChatBase):
-    pass
+    title: str
+    userId: str
 
 
 class Chat(ChatBase):
