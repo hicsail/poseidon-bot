@@ -50,36 +50,35 @@ Future<void> _handleSubmitted(String text) async {
   _controller.clear();
   _scrollToBottom();
 
-  try {
-    // Replace with your Ollama API endpoint and request format
-    final response = await http.post(
-      Uri.parse('https://api.ollama.com/v1/'),
-      headers: {
-        'Authorization': 'OLLAMA_API_KEY',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'prompt': text,
-        'max_tokens': 150,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final botResponse = data['response_text'];  // Adjust this according to Ollama's response format
-      setState(() {
-        _chatSessions[_currentChatIndex].add(_Message(text: botResponse, isUser: false));
-      });
-    } else {
-      setState(() {
-        _chatSessions[_currentChatIndex].add(_Message(text: 'Error: Unable to fetch response from Ollama', isUser: false));
-      });
-    }
-  } catch (e) {
-    setState(() {
-      _chatSessions[_currentChatIndex].add(_Message(text: 'Error: $e', isUser: false));
+   try {
+       final response = await http.post(Uri.parse('http://localhost:5001/query'), 
+       headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'query': text,
+        }),);
+       var answer = _Message(text: "This is a simulated bot response.", isUser: false);
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          var json = jsonDecode(response.body) as Map<String, dynamic>;
+          json['isUser'] = false;
+          answer = _Message.fromJson(json);
+          print(answer);
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception(response.body);
+        } setState(() {
+      // For now, simulate a bot response after a delay.
+      _chatSessions[_currentChatIndex].add(answer);
     });
-  }
+    print(text);
+    } catch (e) {
+      print('Error: $e');
+    }
+    _controller.clear();
 
   _scrollToBottom();
   _saveChatHistory(); // Save the chat history after receiving the bot response
