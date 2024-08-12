@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SendButton extends StatefulWidget {
   final void Function(String) onSubmitted;
 
-  const SendButton({Key? key, required this.onSubmitted}) : super(key: key);
+  const SendButton({super.key, required this.onSubmitted});
 
   @override
   State<SendButton> createState() => SendButtonState();
@@ -22,9 +22,9 @@ class SendButtonState extends State<SendButton> {
             child: TextField(
               controller: textController,
               onSubmitted: handleSubmitted,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Message Poseidon-Bot',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
               ),
             ),
           ),
