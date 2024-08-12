@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ChatPage extends StatefulWidget {
