@@ -107,8 +107,9 @@ class ChatMessage {
   final String text;
   final bool isUser;
   final bool isAnimated;
+  bool hasBeenAnimated;
 
-  ChatMessage({required this.text, required this.isUser, this.isAnimated = false});
+  ChatMessage({required this.text, required this.isUser, this.isAnimated = false, this.hasBeenAnimated = false});
 }
 
 class ChatMessageWidget extends StatelessWidget {
@@ -144,8 +145,18 @@ class ChatMessageWidget extends StatelessWidget {
                   fontSize: 16.0,
                   fontFamily: 'popin',
                 ),
-                child: AnimatedTextKit(
+                child: message.hasBeenAnimated
+                ? Text(
+                  message.text,
+                  style: TextStyle(
+                    color: message.isUser ? Colors.white : Colors.black87
+                  ),
+                )
+                : AnimatedTextKit(
                   isRepeatingAnimation: false,
+                  onFinished: () {
+                    message.hasBeenAnimated = true;
+                  },
                   animatedTexts: [
                     TyperAnimatedText(
                       message.text,
