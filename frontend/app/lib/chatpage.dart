@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -33,7 +34,11 @@ class ChatPageState extends State<ChatPage> {
 
     setState(() {
       messages.add(ChatMessage(text: text, isUser: true));
-      messages.add(ChatMessage(text: "This is a simulated bot response.", isUser: false));
+      messages.add(ChatMessage(
+        text: "This is a simulated bot response.", 
+        isUser: false,
+        isAnimated: true,
+        ));
     });
     textController.clear();
     scrollToBottom();
@@ -79,7 +84,7 @@ void scrollToBottom() {
                     focusNode: focusNode,
                     controller: textController,
                     decoration: InputDecoration(
-                      hintText: 'Type a message',
+                      hintText: 'Message Poseidon-Bot',
                       border: OutlineInputBorder(),
                     ),
                     onSubmitted: handleSubmitted,
@@ -101,8 +106,9 @@ void scrollToBottom() {
 class ChatMessage {
   final String text;
   final bool isUser;
+  final bool isAnimated;
 
-  ChatMessage({required this.text, required this.isUser});
+  ChatMessage({required this.text, required this.isUser, this.isAnimated = false});
 }
 
 class ChatMessageWidget extends StatelessWidget {
@@ -132,7 +138,23 @@ class ChatMessageWidget extends StatelessWidget {
               color: message.isUser ? Colors.blueAccent : Colors.grey[300],
               borderRadius: BorderRadius.circular(12.0),
             ),
-            child: Text(
+            child: message.isAnimated
+              ? DefaultTextStyle(
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontFamily: 'popin',
+                ),
+                child: AnimatedTextKit(
+                  isRepeatingAnimation: false,
+                  animatedTexts: [
+                    TyperAnimatedText(
+                      message.text,
+                      speed: Duration(milliseconds: 50),
+                    ),
+                  ],
+                ),
+              )
+            : Text(
               message.text,
               style: TextStyle(
                 color: message.isUser ? Colors.white : Colors.black87,
