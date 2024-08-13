@@ -35,10 +35,10 @@ class ChatPageState extends State<ChatPage> {
     setState(() {
       messages.add(ChatMessage(text: text, isUser: true));
       messages.add(ChatMessage(
-        text: "This is a simulated bot response.", 
+        text: "This is a simulated bot response.",
         isUser: false,
         isAnimated: true,
-        ));
+      ));
     });
     textController.clear();
     scrollToBottom();
@@ -46,19 +46,22 @@ class ChatPageState extends State<ChatPage> {
     print(text);
   }
 
-void scrollToBottom() {
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (scrollController.hasClients) {
-      scrollController.animateTo(scrollController.position.maxScrollExtent,
-        duration: const Duration (milliseconds: 300),
-        curve: Curves.easeInOut,
+  void scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
         );
-    }
-  });
-}
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final messageBarHeight = 20.0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
@@ -66,13 +69,16 @@ void scrollToBottom() {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              padding: const EdgeInsets.all(8.0),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                return ChatMessageWidget(message: messages[index]);
-              },
+            child: Padding(
+              padding: EdgeInsets.only(bottom: messageBarHeight),
+              child: ListView.builder(
+                controller: scrollController,
+                padding: const EdgeInsets.all(8.0),
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  return ChatMessageWidget(message: messages[index]);
+                },
+              ),
             ),
           ),
           Padding(
@@ -128,7 +134,7 @@ class ChatMessageWidget extends StatelessWidget {
         children: <Widget>[
           if (!message.isUser)
             const CircleAvatar(
-              child: Text('AI'),
+              child: Text('P-Bot'),
               backgroundColor: Colors.grey,
             ),
           if (!message.isUser) const SizedBox(width: 8.0),
