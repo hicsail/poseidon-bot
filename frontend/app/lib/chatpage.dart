@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ChatPage extends StatefulWidget {
@@ -66,7 +65,8 @@ class ChatPageState extends State<ChatPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: const Text('Poseidon-Bot'),
+        backgroundColor: Color.fromARGB(255, 173, 232, 245),
       ),
       body: Column(
         children: <Widget>[
@@ -83,44 +83,48 @@ class ChatPageState extends State<ChatPage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          SafeArea(
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
                   Expanded(
                     child: TextField(
-                focusNode: focusNode,
-                controller: textController,
-                decoration: InputDecoration(
-                  hintText: 'Message Poseidon-Bot',
-                  border: OutlineInputBorder(),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                ),
-                maxLines: null,
-                minLines: 1,
-                keyboardType: TextInputType.multiline,
-                textInputAction: TextInputAction.send,
-                onSubmitted: (text) {
-                  if (text.isNotEmpty) {
-                    handleSubmitted(text);
-                  }
-                },
+                      focusNode: focusNode,
+                      controller: textController,
+                      decoration: InputDecoration(
+                        hintText: 'Message Poseidon-Bot',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      ),
+                      maxLines: 8,
+                      minLines: 1,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.send,
+                      onSubmitted: (text) {
+                        if (text.isNotEmpty) {
+                          handleSubmitted(text);
+                        }
+                      },
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      if (textController.text.isNotEmpty) {
+                        handleSubmitted(textController.text);
+                      }
+                    }
+                  )
+                ],
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.send),
-              onPressed: () {
-                if (textController.text.isNotEmpty) {
-                  handleSubmitted(textController.text);
-                  }
-                }
-              )
-            ],
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
   }
 }
 
