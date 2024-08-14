@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ChatPage extends StatefulWidget {
@@ -9,7 +10,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class ChatPageState extends State<ChatPage> {
-  final List<ChatMessage> messages = []; // List to store chat messages
+  final List<ChatMessage> messages = [];
   final ScrollController scrollController = ScrollController();
   final TextEditingController textController = TextEditingController();
   final FocusNode focusNode = FocusNode();
@@ -26,6 +27,7 @@ class ChatPageState extends State<ChatPage> {
   void dispose() {
     textController.dispose();
     focusNode.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -60,7 +62,7 @@ class ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final messageBarHeight = 20.0;
+    final messageBarHeight = 5.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -83,29 +85,42 @@ class ChatPageState extends State<ChatPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    focusNode: focusNode,
-                    controller: textController,
-                    decoration: InputDecoration(
-                      hintText: 'Message Poseidon-Bot',
-                      border: OutlineInputBorder(),
-                    ),
-                    onSubmitted: handleSubmitted,
-                  ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                focusNode: focusNode,
+                controller: textController,
+                decoration: InputDecoration(
+                  hintText: 'Message Poseidon-Bot',
+                  border: OutlineInputBorder(),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () => handleSubmitted(textController.text),
-                ),
-              ],
+                maxLines: null,
+                minLines: 1,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.send,
+                onSubmitted: (text) {
+                  if (text.isNotEmpty) {
+                    handleSubmitted(text);
+                  }
+                },
+              ),
             ),
+            IconButton(
+              icon: Icon(Icons.send),
+              onPressed: () {
+                if (textController.text.isNotEmpty) {
+                  handleSubmitted(textController.text);
+                  }
+                }
+              )
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
   }
 }
 
@@ -140,7 +155,9 @@ class ChatMessageWidget extends StatelessWidget {
           if (!message.isUser) const SizedBox(width: 8.0),
           Container(
             padding: const EdgeInsets.all(10.0),
-            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.75,
+            ),
             decoration: BoxDecoration(
               color: message.isUser ? Colors.blueAccent : Colors.grey[300],
               borderRadius: BorderRadius.circular(12.0),
@@ -155,7 +172,7 @@ class ChatMessageWidget extends StatelessWidget {
                 ? Text(
                   message.text,
                   style: TextStyle(
-                    color: message.isUser ? Colors.white : Colors.black87
+                    color: message.isUser ? Colors.white : Colors.black87,
                   ),
                 )
                 : AnimatedTextKit(
