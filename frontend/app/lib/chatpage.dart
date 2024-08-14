@@ -20,15 +20,23 @@ class ChatPageState extends State<ChatPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       focusNode.requestFocus();
     });
+    textController.addListener(updateIconOpacity);
   }
 
   @override
   void dispose() {
+    textController.removeListener(updateIconOpacity);
     textController.dispose();
     focusNode.dispose();
     scrollController.dispose();
     super.dispose();
   }
+
+  void updateIconOpacity() {
+    setState(() {}); // Trigger a rebuild to update the icon opacity
+  }
+
+  bool get canSend => textController.text.isNotEmpty;
 
   void handleSubmitted(String text) {
     if (text.isEmpty) return;
@@ -97,6 +105,14 @@ class ChatPageState extends State<ChatPage> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: BorderSide(color: Color.fromARGB(255, 173, 232, 245)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                       ),
                       maxLines: 8,
@@ -110,14 +126,24 @@ class ChatPageState extends State<ChatPage> {
                       },
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: () {
-                      if (textController.text.isNotEmpty) {
-                        handleSubmitted(textController.text);
-                      }
-                    }
-                  )
+                  Padding(
+                    padding: const EdgeInsets.only(left: 2.0),
+                    child: AnimatedOpacity(
+                      opacity: canSend ? 1.0 : 0.5,
+                      duration: const Duration(milliseconds: 300),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_circle_right_sharp,
+                          color: canSend ? Color.fromARGB(255, 173, 232, 245) : Colors.grey,
+                        ),
+                        onPressed: canSend ? () {
+                          handleSubmitted(textController.text);
+                        } : null,
+                        highlightColor: Color.fromARGB(255, 173, 232, 245),
+                        hoverColor: Colors.transparent,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -153,8 +179,11 @@ class ChatMessageWidget extends StatelessWidget {
         children: <Widget>[
           if (!message.isUser)
             const CircleAvatar(
-              child: Text('P-Bot'),
-              backgroundColor: Colors.grey,
+              child: Text(
+                '🔱',
+                style: TextStyle(fontSize: 20.0,),
+                ),
+              backgroundColor: Colors.transparent,
             ),
           if (!message.isUser) const SizedBox(width: 8.0),
           Container(
@@ -163,7 +192,7 @@ class ChatMessageWidget extends StatelessWidget {
               maxWidth: MediaQuery.of(context).size.width * 0.75,
             ),
             decoration: BoxDecoration(
-              color: message.isUser ? Colors.blueAccent : Colors.grey[300],
+              color: message.isUser ? Colors.grey[300] : Color.fromARGB(255, 173, 232, 245),
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: message.isAnimated
@@ -195,16 +224,10 @@ class ChatMessageWidget extends StatelessWidget {
             : Text(
               message.text,
               style: TextStyle(
-                color: message.isUser ? Colors.white : Colors.black87,
+                color: message.isUser ? Colors.black87 : Colors.black87,
               ),
             ),
           ),
-          if (message.isUser) const SizedBox(width: 8.0),
-          if (message.isUser)
-            const CircleAvatar(
-              child: Text('U'),
-              backgroundColor: Colors.blueAccent,
-            ),
         ],
       ),
     );
