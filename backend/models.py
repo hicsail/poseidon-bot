@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     email = Column(String, unique=True, index=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
@@ -15,8 +15,8 @@ class User(Base):
 class Chat(Base):
     __tablename__ = "chats"
 
-    id = Column(Integer, primary_key=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    id = Column(String, primary_key=True)
+    owner_id = Column(String, ForeignKey("users.id"))
     title = Column(String)
 
     owner = relationship("User", back_populates="chats")
@@ -25,7 +25,7 @@ class Chat(Base):
 class Message(Base):
     __tablename__ = "messages"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     chat_id = Column(Integer, ForeignKey("chats.id"))
     message = Column(String)
     typeOfMessage = Column(String)

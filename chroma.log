@@ -650,3 +650,439 @@
 [32mINFO[0m:     [12-08-2024 12:21:45] ::1:62588 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
 [32mINFO[0m:     [12-08-2024 12:22:31] ::1:62783 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
 [32mINFO[0m:     [12-08-2024 12:22:36] ::1:62783 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:03:28] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048575. chroma_server_nofile will not be set.
+[32mINFO[0m:     [14-08-2024 12:03:28] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [14-08-2024 12:03:28] Starting component System
+[36mDEBUG[0m:    [14-08-2024 12:03:28] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [14-08-2024 12:03:28] Starting component SqliteDB
+[36mDEBUG[0m:    [14-08-2024 12:03:28] Starting component QuotaEnforcer
+[36mDEBUG[0m:    [14-08-2024 12:03:28] Starting component Posthog
+[36mDEBUG[0m:    [14-08-2024 12:03:28] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [14-08-2024 12:03:28] Starting component SegmentAPI
+[32mINFO[0m:     [14-08-2024 12:03:28] Started server process [[36m10238[0m]
+[32mINFO[0m:     [14-08-2024 12:03:28] Waiting for application startup.
+[32mINFO[0m:     [14-08-2024 12:03:28] Application startup complete.
+[32mINFO[0m:     [14-08-2024 12:03:28] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [14-08-2024 12:03:31] 127.0.0.1:51191 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:03:31] 127.0.0.1:51191 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:03:33] 127.0.0.1:51196 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:03:33] 127.0.0.1:51196 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:03:33] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:03:33] 127.0.0.1:51197 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:03:34] 127.0.0.1:51197 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:03:34] Starting component PersistentLocalHnswSegment
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:03:34] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:03:34] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:03:34] 127.0.0.1:51197 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:04:22] 127.0.0.1:51253 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:05:09] 127.0.0.1:51456 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:05:09] 127.0.0.1:51456 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:05:10] 127.0.0.1:51465 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:05:10] 127.0.0.1:51465 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:05:10] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:05:10] 127.0.0.1:51466 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:05:11] 127.0.0.1:51466 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:05:11] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:05:11] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:05:11] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:05:11] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:05:11] 127.0.0.1:51466 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:05:24] 127.0.0.1:51534 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:08:18] 127.0.0.1:52287 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:08:18] 127.0.0.1:52287 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:08:20] 127.0.0.1:52300 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:08:20] 127.0.0.1:52300 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:08:20] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:08:20] 127.0.0.1:52301 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:08:21] 127.0.0.1:52301 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:08:21] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:08:21] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:08:21] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:08:21] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:08:21] 127.0.0.1:52301 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:08:48] 127.0.0.1:52432 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:09:19] 127.0.0.1:52562 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:16:23] 127.0.0.1:54560 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:16:34] 127.0.0.1:54613 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:17:08] 127.0.0.1:54779 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:20:05] 127.0.0.1:55511 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:20:05] 127.0.0.1:55511 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:20:06] 127.0.0.1:55524 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:20:06] 127.0.0.1:55524 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:20:06] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:20:06] 127.0.0.1:55525 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:20:07] 127.0.0.1:55525 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:20:07] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:20:07] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:20:07] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:20:07] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:20:07] 127.0.0.1:55525 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:20:18] 127.0.0.1:55594 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:22:23] 127.0.0.1:56111 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:22:23] 127.0.0.1:56111 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:22:24] 127.0.0.1:56120 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:22:24] 127.0.0.1:56120 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:22:24] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:22:24] 127.0.0.1:56121 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:22:25] 127.0.0.1:56121 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:22:25] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:22:25] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:22:25] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:22:25] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:22:25] 127.0.0.1:56121 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:22:31] 127.0.0.1:56153 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:23:40] 127.0.0.1:56440 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:23:40] 127.0.0.1:56440 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:23:41] 127.0.0.1:56448 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:23:41] 127.0.0.1:56448 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:23:41] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:23:41] 127.0.0.1:56449 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:23:42] 127.0.0.1:56449 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:23:42] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:23:42] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:23:42] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:23:42] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:23:42] 127.0.0.1:56449 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:23:53] 127.0.0.1:56509 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:27:43] 127.0.0.1:57459 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:27:43] 127.0.0.1:57459 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:27:44] 127.0.0.1:57468 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:27:44] 127.0.0.1:57468 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:27:44] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:27:44] 127.0.0.1:57469 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:27:45] 127.0.0.1:57469 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:27:45] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:27:45] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:27:45] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:27:45] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:27:45] 127.0.0.1:57469 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:27:55] 127.0.0.1:57533 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:29:14] 127.0.0.1:57887 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:29:14] 127.0.0.1:57887 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:29:15] 127.0.0.1:57900 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:29:15] 127.0.0.1:57900 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:29:15] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:29:15] 127.0.0.1:57901 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:29:16] 127.0.0.1:57901 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:29:16] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:29:16] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:29:16] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:29:16] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:29:16] 127.0.0.1:57901 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:29:21] 127.0.0.1:57901 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:29:37] 127.0.0.1:58006 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:32:25] 127.0.0.1:58732 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:32:25] 127.0.0.1:58732 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:32:26] 127.0.0.1:58749 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:32:26] 127.0.0.1:58749 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:32:26] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:32:26] 127.0.0.1:58750 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:32:27] 127.0.0.1:58750 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:32:27] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:32:27] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:32:27] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:32:27] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:32:27] 127.0.0.1:58750 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:32:35] 127.0.0.1:58791 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:33:21] 127.0.0.1:58982 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:33:21] 127.0.0.1:58982 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:33:22] 127.0.0.1:58986 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:33:22] 127.0.0.1:58986 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:33:22] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:33:22] 127.0.0.1:58987 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:33:22] 127.0.0.1:58987 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:33:22] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:33:22] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:33:22] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:33:22] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:33:22] 127.0.0.1:58987 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:33:34] 127.0.0.1:59045 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:35:45] 127.0.0.1:59584 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:35:45] 127.0.0.1:59584 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:35:46] 127.0.0.1:59593 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:35:46] 127.0.0.1:59593 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:35:46] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:35:46] 127.0.0.1:59594 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:35:47] 127.0.0.1:59594 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:35:47] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:35:47] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:35:47] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:35:47] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:35:47] 127.0.0.1:59594 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:35:58] 127.0.0.1:59660 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:40:52] 127.0.0.1:60628 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:44:23] 127.0.0.1:61501 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:44:23] 127.0.0.1:61501 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:44:24] 127.0.0.1:61510 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:44:24] 127.0.0.1:61510 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:44:25] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:44:25] 127.0.0.1:61511 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:44:25] 127.0.0.1:61511 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:44:25] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:44:25] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:44:25] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:44:25] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:44:25] 127.0.0.1:61511 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:44:35] 127.0.0.1:61567 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:47:23] 127.0.0.1:62264 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:47:23] 127.0.0.1:62264 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:47:25] 127.0.0.1:62273 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:47:25] 127.0.0.1:62273 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:47:25] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:47:25] 127.0.0.1:62274 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:47:26] 127.0.0.1:62274 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:47:26] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:47:26] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:47:26] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:47:26] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:47:26] 127.0.0.1:62274 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:47:30] 127.0.0.1:62274 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:55:05] 127.0.0.1:64333 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:55:05] 127.0.0.1:64333 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:55:06] 127.0.0.1:64342 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:55:06] 127.0.0.1:64342 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:55:06] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:55:06] 127.0.0.1:64343 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:55:07] 127.0.0.1:64343 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:55:07] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:55:07] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:55:07] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:55:07] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:55:07] 127.0.0.1:64343 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:56:01] 127.0.0.1:64583 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:56:01] 127.0.0.1:64583 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:56:02] 127.0.0.1:64587 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:56:02] 127.0.0.1:64587 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:56:02] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:56:02] 127.0.0.1:64588 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:56:02] 127.0.0.1:64588 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:56:02] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:56:02] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:56:02] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:56:02] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:56:02] 127.0.0.1:64588 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 12:59:03] 127.0.0.1:65359 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:59:03] 127.0.0.1:65359 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:59:04] 127.0.0.1:65372 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:59:04] 127.0.0.1:65372 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 12:59:04] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 12:59:04] 127.0.0.1:65373 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 12:59:05] 127.0.0.1:65373 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 12:59:05] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:59:05] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 12:59:05] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 12:59:05] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 12:59:05] 127.0.0.1:65373 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 13:00:13] 127.0.0.1:49293 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:00:13] 127.0.0.1:49293 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:00:14] 127.0.0.1:49303 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:00:14] 127.0.0.1:49303 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 13:00:14] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 13:00:14] 127.0.0.1:49304 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:00:15] 127.0.0.1:49304 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 13:00:15] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:00:15] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:00:15] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:00:15] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 13:00:15] 127.0.0.1:49304 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 13:02:05] 127.0.0.1:49816 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:02:05] 127.0.0.1:49816 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:02:07] 127.0.0.1:49831 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:02:07] 127.0.0.1:49831 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 13:02:07] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 13:02:07] 127.0.0.1:49832 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:02:08] 127.0.0.1:49832 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 13:02:08] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:02:08] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:02:08] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:02:08] Insert of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 13:02:08] 127.0.0.1:49832 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 13:02:15] 127.0.0.1:49883 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 13:12:10] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048575. chroma_server_nofile will not be set.
+[32mINFO[0m:     [14-08-2024 13:12:10] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [14-08-2024 13:12:10] Starting component System
+[36mDEBUG[0m:    [14-08-2024 13:12:10] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [14-08-2024 13:12:10] Starting component SqliteDB
+[36mDEBUG[0m:    [14-08-2024 13:12:10] Starting component QuotaEnforcer
+[36mDEBUG[0m:    [14-08-2024 13:12:10] Starting component Posthog
+[36mDEBUG[0m:    [14-08-2024 13:12:10] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [14-08-2024 13:12:10] Starting component SegmentAPI
+[32mINFO[0m:     [14-08-2024 13:12:10] Started server process [[36m24931[0m]
+[32mINFO[0m:     [14-08-2024 13:12:10] Waiting for application startup.
+[32mINFO[0m:     [14-08-2024 13:12:10] Application startup complete.
+[32mINFO[0m:     [14-08-2024 13:12:10] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [14-08-2024 13:12:29] 127.0.0.1:50684 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:12:29] 127.0.0.1:50684 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:12:31] 127.0.0.1:50689 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:12:31] 127.0.0.1:50689 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 13:12:31] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 13:12:31] 127.0.0.1:50690 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:12:32] 127.0.0.1:50690 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 13:12:32] Starting component PersistentLocalHnswSegment
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Insert of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:12:32] Add of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 13:12:32] 127.0.0.1:50690 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201
+[32mINFO[0m:     [14-08-2024 13:20:46] 127.0.0.1:51290 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:20:46] 127.0.0.1:51290 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:20:47] 127.0.0.1:51296 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:20:47] 127.0.0.1:51296 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [14-08-2024 13:20:47] Collection my_collection already exists, returning existing collection.
+[32mINFO[0m:     [14-08-2024 13:20:47] 127.0.0.1:51297 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-08-2024 13:20:48] 127.0.0.1:51297 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[33mWARNING[0m:  [14-08-2024 13:20:48] Insert of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:20:48] Insert of existing embedding ID: 1
+[33mWARNING[0m:  [14-08-2024 13:20:48] Add of existing embedding ID: 0
+[33mWARNING[0m:  [14-08-2024 13:20:48] Add of existing embedding ID: 1
+[32mINFO[0m:     [14-08-2024 13:20:48] 127.0.0.1:51297 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/add HTTP/1.1" 201

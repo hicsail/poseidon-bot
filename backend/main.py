@@ -16,13 +16,13 @@ import chromadb
 
 models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
+
+origins = [
+    "http://localhost",
+    "http://localhost:51201",
+    "*",
+]
+
 chroma_client = chromadb.Client()
 
 documents = ["Hello world", "Chroma is great for embeddings"]
@@ -103,14 +103,15 @@ def get_messages(chat_id: str, q: str = None):
     return {"chat_id": chat_id, "q": q}
 
 @app.get("/chats")
-def get_chats(q: str = None):
-    #read data from database
-    return {"q": q}
+def get_chats(db: Session = Depends(get_db)):
+    chats = crud.get_chats(db)
+    return {"title" : chats[0].title}
 
 @app.post("/chats/{chat_id}")
 def create_message(input: schemas.MessageCreate, db: Session = Depends(get_db)):
+    print(input)
     crud.create_message(db, input)
-    return {"chat_ttle": input.chat_id, "message": input.message}
+    return {"chat_title": input.chat_id, "message": input.message}
 
 @app.post("/chats")
 def create_chat(input: schemas.ChatCreate, db: Session = Depends(get_db)):
@@ -145,3 +146,12 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],  # Allows all methods
+    allow_headers=["X-Requested-With", "Content-Type", "Access-Control-Allow-Origin"],  # Allows all headers
+    # expose_headers=["*"], # Exposes all headers
+)

@@ -63,7 +63,7 @@ class _ChatPageState extends State<ChatPage> {
         },
         body: jsonEncode(<String, dynamic>{
           'chat_id': _chatSessions[_currentChatIndex].id,
-          'messages': _chatSessions[_currentChatIndex].messages.map((msg) => msg.toJson()).toList(),
+          'message': _chatSessions[_currentChatIndex].messages.last.text,
         }),);
        var answer = _Message(text: "This is a simulated bot response.", isUser: false);
         if (response.statusCode == 200) {
