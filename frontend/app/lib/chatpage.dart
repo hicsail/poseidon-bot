@@ -133,9 +133,10 @@ class ChatPageState extends State<ChatPage> {
                       duration: const Duration(milliseconds: 300),
                       child: IconButton(
                         icon: Icon(
-                          Icons.arrow_circle_right_sharp,
+                          Icons.arrow_circle_up_sharp,
                           color: canSend ? Color.fromARGB(255, 173, 232, 245) : Colors.grey,
                         ),
+                        iconSize: 40.0,
                         onPressed: canSend ? () {
                           handleSubmitted(textController.text);
                         } : null,
