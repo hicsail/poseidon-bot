@@ -6,7 +6,9 @@ class ChatPage extends StatefulWidget {
 
   @override
   ChatPageState createState() => ChatPageState();
-}
+} 
+
+const MainColor = Color.fromARGB(255, 173, 232, 245);
 
 class ChatPageState extends State<ChatPage> {
   final List<ChatMessage> messages = [];
@@ -43,11 +45,11 @@ class ChatPageState extends State<ChatPage> {
 
     Duration speed;
     String botResponse = "This is a simulated bot response.";
-      if (botResponse.length < 100) {
-        speed = Duration(milliseconds: 50);
-      } else {
-        speed = Duration(milliseconds: 5);
-      }
+    if (botResponse.length < 100) {
+      speed = Duration(milliseconds: 30);
+    } else {
+      speed = Duration(milliseconds: 5);
+    }
 
     setState(() {
       messages.add(ChatMessage(text: text, isUser: true));
@@ -59,7 +61,7 @@ class ChatPageState extends State<ChatPage> {
       ));
     });
     textController.clear();
-    Future.delayed(Duration(milliseconds: 300), () {
+    Future.delayed(Duration(milliseconds: 100), () {
       scrollToBottom();
     });
     focusNode.requestFocus();
@@ -84,8 +86,38 @@ class ChatPageState extends State<ChatPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Poseidon-Bot'),
-        backgroundColor: Color.fromARGB(255, 173, 232, 245),
+        backgroundColor: MainColor,
+        title: Center(
+          child: Text(
+            'Poseidon-Bot',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.settings),
+            iconSize: 25,
+            onSelected: (String result) {
+              if (result == 'Profile') {
+                // Handle profile action
+              } else if (result == 'Logout') {
+                // Handle logout action
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Profile',
+                child: Text('Profile'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Logout',
+                child: Text('Logout'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -100,9 +132,11 @@ class ChatPageState extends State<ChatPage> {
                   return ChatMessageWidget(
                     message: messages[index],
                     onAnimationFinished: () {
-                      if (!messages[index].isUser) {}
-                    }
-                    );
+                      if (!messages[index].isUser) {
+                        // Handle animation finished for bot messages if needed
+                      }
+                    },
+                  );
                 },
               ),
             ),
@@ -123,7 +157,7 @@ class ChatPageState extends State<ChatPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(color: Color.fromARGB(255, 173, 232, 245)),
+                          borderSide: BorderSide(color: MainColor),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
@@ -150,13 +184,13 @@ class ChatPageState extends State<ChatPage> {
                       child: IconButton(
                         icon: Icon(
                           Icons.arrow_circle_up_sharp,
-                          color: canSend ? Color.fromARGB(255, 173, 232, 245) : Colors.grey,
+                          color: canSend ? MainColor : Colors.grey,
                         ),
                         iconSize: 40.0,
                         onPressed: canSend ? () {
                           handleSubmitted(textController.text);
                         } : null,
-                        highlightColor: Color.fromARGB(255, 173, 232, 245),
+                        highlightColor: MainColor,
                         hoverColor: Colors.transparent,
                       ),
                     ),
@@ -178,14 +212,23 @@ class ChatMessage {
   final Duration? animationSpeed;
   bool hasBeenAnimated;
 
-  ChatMessage({required this.text, required this.isUser, this.isAnimated = false, this.animationSpeed, this.hasBeenAnimated = false});
+  ChatMessage({
+    required this.text,
+    required this.isUser,
+    this.isAnimated = false,
+    this.animationSpeed,
+    this.hasBeenAnimated = false,
+  });
 }
 
 class ChatMessageWidget extends StatelessWidget {
   final ChatMessage message;
   final VoidCallback? onAnimationFinished;
 
-  const ChatMessageWidget({required this.message, this.onAnimationFinished});
+  const ChatMessageWidget({
+    required this.message,
+    this.onAnimationFinished,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -200,8 +243,8 @@ class ChatMessageWidget extends StatelessWidget {
             const CircleAvatar(
               child: Text(
                 '🔱',
-                style: TextStyle(fontSize: 20.0,),
-                ),
+                style: TextStyle(fontSize: 20.0),
+              ),
               backgroundColor: Colors.transparent,
             ),
           if (!message.isUser) const SizedBox(width: 8.0),
@@ -211,44 +254,44 @@ class ChatMessageWidget extends StatelessWidget {
               maxWidth: MediaQuery.of(context).size.width * 0.75,
             ),
             decoration: BoxDecoration(
-              color: message.isUser ? Colors.grey[300] : Color.fromARGB(255, 173, 232, 245),
+              color: message.isUser ? Colors.grey[300] : MainColor,
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: message.isAnimated
               ? DefaultTextStyle(
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontFamily: 'popin',
-                ),
-                child: message.hasBeenAnimated
-                ? Text(
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontFamily: 'popin',
+                  ),
+                  child: message.hasBeenAnimated
+                    ? Text(
+                        message.text,
+                        style: TextStyle(
+                          color: message.isUser ? Colors.white : Colors.black87,
+                        ),
+                      )
+                    : AnimatedTextKit(
+                        isRepeatingAnimation: false,
+                        onFinished: () {
+                          message.hasBeenAnimated = true;
+                          if (onAnimationFinished != null) {
+                            onAnimationFinished!();
+                          }
+                        },
+                        animatedTexts: [
+                          TyperAnimatedText(
+                            message.text,
+                            speed: message.animationSpeed ?? Duration(milliseconds: 50),
+                          ),
+                        ],
+                      ),
+                )
+              : Text(
                   message.text,
                   style: TextStyle(
-                    color: message.isUser ? Colors.white : Colors.black87,
+                    color: message.isUser ? Colors.black87 : Colors.black87,
                   ),
-                )
-                : AnimatedTextKit(
-                  isRepeatingAnimation: false,
-                  onFinished: () {
-                    message.hasBeenAnimated = true;
-                    if (onAnimationFinished != null) {
-                      onAnimationFinished!();
-                    }
-                  },
-                  animatedTexts: [
-                    TyperAnimatedText(
-                      message.text,
-                      speed: message.animationSpeed ?? Duration(milliseconds: 50),
-                    ),
-                  ],
                 ),
-              )
-            : Text(
-              message.text,
-              style: TextStyle(
-                color: message.isUser ? Colors.black87 : Colors.black87,
-              ),
-            ),
           ),
         ],
       ),

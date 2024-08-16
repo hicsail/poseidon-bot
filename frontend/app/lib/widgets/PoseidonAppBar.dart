@@ -11,18 +11,43 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      title: Text(title),
+      title: Center(
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
+      ),
       leading: IconButton(
         icon: const Icon(Icons.chat),
         iconSize: 25,
         onPressed: () {
           Navigator.push(context, SlideFromLeftPageRoute(widget: const ChatPage()));
         },
-        alignment: FractionalOffset.topLeft,
       ),
+      actions: [
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.settings),
+          iconSize: 25,
+          onSelected: (String result) {
+            if (result == 'Profile') {}
+            else if (result == 'Logout') {}
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            const PopupMenuItem<String>(
+              value: 'Profile',
+              child: Text('Profile'),
+            ),
+            const PopupMenuItem<String>(
+              value: 'Logout',
+              child: Text('Logout'),
+            )
+          ],
+        )
+      ],
     );
   }
-
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
