@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -166,7 +167,7 @@ Future<void> _handleSubmitted(String text) async {
                   child: TextField(
                     controller: _controller,
                     decoration: const InputDecoration.collapsed(
-                      hintText: 'Type your message here...',
+                      hintText: 'Message Poseidon-Bot',
                     ),
                     onSubmitted: _handleSubmitted,
                   ),
@@ -187,8 +188,9 @@ Future<void> _handleSubmitted(String text) async {
 class _Message {
   final String text;
   final bool isUser;
+  final bool isAnimated;
 
-  _Message({required this.text, required this.isUser});
+  _Message({required this.text, required this.isUser, this.isAnimated = false});
 
   Map<String, dynamic> toJson() => {
         'text': text,
@@ -227,8 +229,23 @@ class _MessageWidget extends StatelessWidget {
               color: message.isUser ? Colors.blueAccent : Colors.grey[300],
               borderRadius: BorderRadius.circular(12.0),
             ),
-            child: Text(
-              message.text,
+      child: message.isAnimated
+              ? DefaultTextStyle(
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontFamily: 'popin',
+                ),
+                child: AnimatedTextKit(
+                  isRepeatingAnimation: false,
+                  animatedTexts: [
+                    TyperAnimatedText(
+                      message.text,
+                      speed: Duration(milliseconds: 50),
+                    ),
+                  ],
+                ),
+              )
+            : Text(message.text,
               style: TextStyle(
                 color: message.isUser ? Colors.white : Colors.black87,
               ),
