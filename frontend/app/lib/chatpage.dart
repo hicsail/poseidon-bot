@@ -46,7 +46,7 @@ class ChatPageState extends State<ChatPage> {
       if (botResponse.length < 100) {
         speed = Duration(milliseconds: 50);
       } else {
-        speed = Duration(milliseconds: 10);
+        speed = Duration(milliseconds: 5);
       }
 
     setState(() {
@@ -59,7 +59,9 @@ class ChatPageState extends State<ChatPage> {
       ));
     });
     textController.clear();
-    scrollToBottom();
+    Future.delayed(Duration(milliseconds: 300), () {
+      scrollToBottom();
+    });
     focusNode.requestFocus();
     print(text);
   }
@@ -95,7 +97,12 @@ class ChatPageState extends State<ChatPage> {
                 padding: const EdgeInsets.all(8.0),
                 itemCount: messages.length,
                 itemBuilder: (context, index) {
-                  return ChatMessageWidget(message: messages[index]);
+                  return ChatMessageWidget(
+                    message: messages[index],
+                    onAnimationFinished: () {
+                      if (!messages[index].isUser) {}
+                    }
+                    );
                 },
               ),
             ),
@@ -176,8 +183,9 @@ class ChatMessage {
 
 class ChatMessageWidget extends StatelessWidget {
   final ChatMessage message;
+  final VoidCallback? onAnimationFinished;
 
-  const ChatMessageWidget({required this.message});
+  const ChatMessageWidget({required this.message, this.onAnimationFinished});
 
   @override
   Widget build(BuildContext context) {
@@ -223,6 +231,9 @@ class ChatMessageWidget extends StatelessWidget {
                   isRepeatingAnimation: false,
                   onFinished: () {
                     message.hasBeenAnimated = true;
+                    if (onAnimationFinished != null) {
+                      onAnimationFinished!();
+                    }
                   },
                   animatedTexts: [
                     TyperAnimatedText(
