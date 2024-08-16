@@ -41,12 +41,21 @@ class ChatPageState extends State<ChatPage> {
   void handleSubmitted(String text) {
     if (text.isEmpty) return;
 
+    Duration speed;
+    String botResponse = "This is a simulated bot response.";
+      if (botResponse.length < 100) {
+        speed = Duration(milliseconds: 50);
+      } else {
+        speed = Duration(milliseconds: 10);
+      }
+
     setState(() {
       messages.add(ChatMessage(text: text, isUser: true));
       messages.add(ChatMessage(
-        text: "This is a simulated bot response.",
+        text: botResponse,
         isUser: false,
         isAnimated: true,
+        animationSpeed: speed,
       ));
     });
     textController.clear();
@@ -159,9 +168,10 @@ class ChatMessage {
   final String text;
   final bool isUser;
   final bool isAnimated;
+  final Duration? animationSpeed;
   bool hasBeenAnimated;
 
-  ChatMessage({required this.text, required this.isUser, this.isAnimated = false, this.hasBeenAnimated = false});
+  ChatMessage({required this.text, required this.isUser, this.isAnimated = false, this.animationSpeed, this.hasBeenAnimated = false});
 }
 
 class ChatMessageWidget extends StatelessWidget {
@@ -217,7 +227,7 @@ class ChatMessageWidget extends StatelessWidget {
                   animatedTexts: [
                     TyperAnimatedText(
                       message.text,
-                      speed: Duration(milliseconds: 50),
+                      speed: message.animationSpeed ?? Duration(milliseconds: 50),
                     ),
                   ],
                 ),
