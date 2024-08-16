@@ -2,8 +2,8 @@ from pydantic import BaseModel
 
 class MessageBase(BaseModel):
     title: str
-    message: str | None = None
-    typeOfMessage: str | None = None
+    # message: str | None = None
+    # typeOfMessage: str | None = None
 
 
 class MessageCreate(MessageBase):
