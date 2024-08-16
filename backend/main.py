@@ -1,10 +1,12 @@
 from contextlib import asynccontextmanager
 from typing import Union
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 # import crud, models, schemas, database
 from . import crud, models, schemas, database
-from flask import request, jsonify
 import ollama
 
 # from .embeddings import LlamaEmbeddingFunction
@@ -14,6 +16,13 @@ import chromadb
 
 models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 chroma_client = chromadb.Client()
 
 documents = ["Hello world", "Chroma is great for embeddings"]
@@ -34,24 +43,34 @@ if __name__ == "__main__":
     main()
 
 # client = chromadb.PersistentClient(path="backend/temp.data")
+class Input(BaseModel):
+    query: str
  
-@app.route('/query', methods=['POST'])
-def query():
-    data = request.json
-    query_text = data.get('query')
+@app.post('/query')
+def query(input: Input):
+    try:
+        chroma_result = collection.query(
+            query_texts=input.query,
+            n_results=2
+        )
 
-    chroma_result = collection.query(
-        query_texts=query_text,
-        n_results=2
-    )
-    ollama_result = ollama.chat(
-        model='llama3.1',
-        messages=[{'role': 'user', 'content': chroma_result + query_text}],
-    )
+        print(chroma_result)
+        print(chroma_result['documents'][0][0])
 
-    return jsonify({
-        'llama_result': ollama_result
-    })
+        ollama_result = ollama.chat(
+            model='llama3.1',
+            messages=[{'role': 'user', 'content': chroma_result['documents'][0][0] + input.query}],
+        )
+
+        print(ollama_result["message"]["content"])
+
+        response = {
+            'text': ollama_result["message"]["content"],
+        }
+
+        return JSONResponse(content=response)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == '__main__':
     app.run(debug=True)
@@ -115,12 +134,10 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
     return crud.create_user(db=db, user=user)
 
-
 @app.get("/users", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
-
 
 @app.get("/users/{user_id}", response_model=schemas.User)
 def read_user(user_id: int, db: Session = Depends(get_db)):
