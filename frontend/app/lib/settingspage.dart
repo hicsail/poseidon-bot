@@ -73,7 +73,7 @@ class Body extends StatelessWidget {
               separatorBuilder: (context, index) => const SizedBox(
                 height: 20,
               ),
-              itemCount: 3, // Adjust the item count according to your data
+              itemCount: 1,
             ),
           ),
         ),
@@ -112,33 +112,32 @@ class PrivacySettings extends StatelessWidget {
   }
 }
 
-
 class ListItem extends StatelessWidget {
   const ListItem();
 
-@override
-Widget build(BuildContext context) {
-  return DecoratedBox(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(),
-    ),
-    child: Padding(
-      padding: EdgeInsets.all(6),
-      child: Column(
-        children: [
-          SideMenuItem(
-            title: 'Theme',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ThemeScreen()),
-              );
-            },
-              icon: Icon(Icons.home),
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(6),
+        child: Column(
+          children: [
+            SideMenuItem(
+              title: 'Theme',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ThemeScreen()),
+                );
+              },
+              icon: Icon(Icons.palette),
               badgeContent: Text(
-                '3',
-                style: TextStyle(color: Colors.white),
+                '0',
+                style: TextStyle(color: Colors.transparent),
               ),
             ),
             SideMenuExpansionItem(
@@ -171,7 +170,9 @@ Widget build(BuildContext context) {
             ),
             SideMenuItem(
               title: 'Logout',
-              onTap: () {},
+              onTap: () {
+                // Handle logout logic
+              },
               icon: Icon(Icons.exit_to_app),
               badgeContent: SizedBox.shrink(),
             ),
@@ -182,6 +183,7 @@ Widget build(BuildContext context) {
   }
 }
 
+// Uncomment if you need PageButton
 // class PageButton extends StatelessWidget {
 //   const PageButton();
 
