@@ -1,13 +1,13 @@
-import 'package:app/chatpage.dart';
-import 'package:app/widgets/SlideFromLeftPageRoute.dart';
 import 'package:flutter/material.dart';
+import 'package:app/chatpage.dart';
 import 'package:app/settingspage.dart';
-import 'package:app/widgets/SlideFromRightPageRoute.dart';
+import 'package:app/widgets/SlideFromLeftPageRoute.dart';
+import 'package:app/widgets/SlideFromRightMenuRoute.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  const CustomAppBar({required this.title, super.key});
+  const CustomAppBar({required this.title, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Center(
         child: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
           ),
         ),
@@ -25,7 +25,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.chat),
         iconSize: 25,
         onPressed: () {
-          Navigator.push(context, SlideFromLeftPageRoute(widget: const ChatPage()));
+          Navigator.push(
+            context,
+            SlideFromLeftPageRoute(widget: const ChatPage()),
+          );
         },
       ),
       actions: [
@@ -34,10 +37,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           iconSize: 25,
           onPressed: () {
             Navigator.push(
-              context, 
-              SlideFromRightPageRoute(
-                widget: const Body(),
-              )
+              context,
+              SlideFromRightMenuRoute(
+                menuWidget: const SettingsPage(), // Ensure the correct page is used
+              ),
             );
           },
         ),

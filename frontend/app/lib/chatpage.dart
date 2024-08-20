@@ -1,3 +1,5 @@
+import 'package:app/settingspage.dart';
+import 'package:app/widgets/SlideFromRightMenuRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -95,28 +97,19 @@ class ChatPageState extends State<ChatPage> {
             ),
           ),
         ),
-        actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.settings),
-            iconSize: 25,
-            onSelected: (String result) {
-              if (result == 'Profile') {
-                // Handle profile action
-              } else if (result == 'Logout') {
-                // Handle logout action
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'Profile',
-                child: Text('Profile'),
+              actions: [
+        IconButton(
+          icon: const Icon(Icons.settings),
+          iconSize: 25,
+          onPressed: () {
+            Navigator.push(
+              context,
+              SlideFromRightMenuRoute(
+                menuWidget: const SettingsPage(), // Ensure the correct page is used
               ),
-              const PopupMenuItem<String>(
-                value: 'Logout',
-                child: Text('Logout'),
-              ),
-            ],
-          ),
+            );
+          },
+        ),
         ],
       ),
       body: Column(
