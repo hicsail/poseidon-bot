@@ -82,6 +82,16 @@ class Body extends StatelessWidget {
   }
 }
 
+class AccountScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Account')),
+      body: Center(child: Text('Your Account')),
+    );
+  }
+}
+
 class ThemeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -123,9 +133,42 @@ class ListItem extends StatelessWidget {
         border: Border.all(),
       ),
       child: Padding(
-        padding: EdgeInsets.all(6),
+        padding: const EdgeInsets.all(6),
         child: Column(
           children: [
+            SideMenuItem(
+              title: "Account",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AccountScreen()),
+                );
+              },
+              icon: Icon(Icons.person),
+              badgeContent: SizedBox.shrink(),
+            ),
+            SideMenuItem(
+              title: 'Information',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AccountInformation()),
+                );
+              },
+              icon: Icon(Icons.phone),
+              badgeContent: SizedBox.shrink(),
+            ),
+            SideMenuItem(
+              title: 'Privacy',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PrivacySettings()),
+                );
+              },
+              icon: Icon(Icons.lock),
+              badgeContent: SizedBox.shrink(),
+            ),
             SideMenuItem(
               title: 'Theme',
               onTap: () {
@@ -139,34 +182,6 @@ class ListItem extends StatelessWidget {
                 '0',
                 style: TextStyle(color: Colors.transparent),
               ),
-            ),
-            SideMenuExpansionItem(
-              title: "Account",
-              icon: Icon(Icons.person),
-              children: [
-                SideMenuItem(
-                  title: 'Information',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AccountInformation()),
-                    );
-                  },
-                  icon: Icon(Icons.phone),
-                  badgeContent: SizedBox.shrink(),
-                ),
-                SideMenuItem(
-                  title: 'Privacy',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => PrivacySettings()),
-                    );
-                  },
-                  icon: Icon(Icons.lock),
-                  badgeContent: SizedBox.shrink(),
-                ),
-              ],
             ),
             SideMenuItem(
               title: 'Logout',
