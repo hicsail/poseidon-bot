@@ -61,9 +61,9 @@ class _ChatPageState extends State<ChatPage> {
      headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, dynamic>{
-          'chat_id': _chatSessions[_currentChatIndex].id,
+        body: jsonEncode(<String, String>{
           'message': _chatSessions[_currentChatIndex].messages.last.text,
+          'chat_id': _chatSessions[_currentChatIndex].id,
         }),);
        var answer = _Message(text: "This is a simulated bot response.", isUser: false);
         if (response.statusCode == 200) {
@@ -129,8 +129,8 @@ Future<void> _handleSubmitted(String text) async {
       'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'title': 'Chat ' + (_chatSessions.length).toString(),
-          'userId': 'asdfasdfasdf',
+          'title': 'Chat ' + (_chatSessions.length+1).toString(),
+          'userId': 'asdf',
         }),);
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response,

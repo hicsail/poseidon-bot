@@ -45,6 +45,10 @@ if __name__ == "__main__":
 # client = chromadb.PersistentClient(path="backend/temp.data")
 class Input(BaseModel):
     query: str
+
+class ChatInput(BaseModel):
+    chat_id: str
+    message: str
  
 @app.post('/query')
 def query(input: Input):
@@ -67,6 +71,9 @@ def query(input: Input):
         response = {
             'text': ollama_result["message"]["content"],
         }
+
+        db = get_db()
+        # crud.create_message(db, schemas.MessageCreate(chat_id=0, message=response['text']))
 
         return JSONResponse(content=response)
     except Exception as e:
@@ -108,9 +115,9 @@ def get_chats(db: Session = Depends(get_db)):
     return {"title" : chats[0].title}
 
 @app.post("/chats/{chat_id}")
-def create_message(input: schemas.MessageCreate, db: Session = Depends(get_db)):
-    print(input)
-    crud.create_message(db, input)
+def create_message(input: ChatInput, db: Session = Depends(get_db)):
+    print("AFFHLSKJDFHLSKDJFHLSDKJDFHS")
+    crud.create_message(input.message, input.chat_id, db)
     return {"chat_title": input.chat_id, "message": input.message}
 
 @app.post("/chats")
@@ -141,7 +148,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 @app.get("/users/{user_id}", response_model=schemas.User)
-def read_user(user_id: int, db: Session = Depends(get_db)):
+def read_user(user_id: str, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
