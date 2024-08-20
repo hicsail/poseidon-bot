@@ -8,30 +8,20 @@ class SlideFromRightMenuRoute extends PageRouteBuilder {
           pageBuilder: (context, animation, secondaryAnimation) {
             final size = MediaQuery.of(context).size;
             final width = size.width / 3;
-            final height = size.height;
 
-            return Scaffold(
-              body: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Container(
-                      color: Colors.transparent, // Background color of main content
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      width: width,
-                      height: height,
-                      child: menuWidget,
-                    ),
-                  ),
-                ],
-              ),
+            return Stack(
+              children: [
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: width,
+                  child: menuWidget,
+                ),
+              ],
             );
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-
             const begin = Offset(1.0, 0.0);
             final end = Offset(0.0, 0.0);
             const curve = Curves.easeInOut;

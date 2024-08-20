@@ -105,7 +105,7 @@ class ChatPageState extends State<ChatPage> {
             Navigator.push(
               context,
               SlideFromRightMenuRoute(
-                menuWidget: const SettingsPage(), // Ensure the correct page is used
+                menuWidget: const SettingsPage(),
               ),
             );
           },
