@@ -1,6 +1,8 @@
 import 'package:app/chatpage.dart';
 import 'package:app/widgets/SlideFromLeftPageRoute.dart';
 import 'package:flutter/material.dart';
+import 'package:app/settingspage.dart';
+import 'package:app/widgets/SlideFromRightPageRoute.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -27,24 +29,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
       actions: [
-        PopupMenuButton<String>(
+        IconButton(
           icon: const Icon(Icons.settings),
           iconSize: 25,
-          onSelected: (String result) {
-            if (result == 'Profile') {}
-            else if (result == 'Logout') {}
+          onPressed: () {
+            Navigator.push(
+              context, 
+              SlideFromRightPageRoute(
+                widget: const Body(),
+              )
+            );
           },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            const PopupMenuItem<String>(
-              value: 'Profile',
-              child: Text('Profile'),
-            ),
-            const PopupMenuItem<String>(
-              value: 'Logout',
-              child: Text('Logout'),
-            )
-          ],
-        )
+        ),
       ],
     );
   }
