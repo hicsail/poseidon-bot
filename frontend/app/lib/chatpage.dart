@@ -246,7 +246,7 @@ class _MessageWidget extends StatelessWidget {
                     ),
                   )
                 : Text(
-               message.text ?? '',
+               message.text ?? 'it is not working',
                  style: TextStyle(
                   color: message.isUser ? Colors.white : Colors.black87,
                 ),
