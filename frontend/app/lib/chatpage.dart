@@ -41,47 +41,47 @@ class _ChatPageState extends State<ChatPage> {
     prefs.setString('chat_sessions', chatData);
   }
 
-Future<void> _handleSubmitted(String text) async {
-  if (text.isEmpty) return;
-  setState(() {
-    _chatSessions[_currentChatIndex].add(_Message(text: text, isUser: true));
-  });
-  _controller.clear();
-  _scrollToBottom();
+  Future<void> _handleSubmitted(String text) async {
+    if (text.isEmpty) return;
+    setState(() {
+      _chatSessions[_currentChatIndex].add(_Message(text: text, isUser: true));
+    });
+    _controller.clear();
+    _scrollToBottom();
 
-   try {
-       final response = await http.post(Uri.parse('http://localhost:5001/query'), 
-       headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:5001/query'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
           'query': text,
-        }),);
-       var answer = _Message(text: "This is a simulated bot response.", isUser: false);
-        if (response.statusCode == 200) {
-          // If the server did return a 200 OK response,
-          // then parse the JSON.
-          var json = jsonDecode(response.body) as Map<String, dynamic>;
-          json['isUser'] = false;
-          answer = _Message.fromJson(json);
-          print(answer);
-        } else {
-          // If the server did not return a 200 OK response,
-          // then throw an exception.
-          throw Exception(response.body);
-        } setState(() {
-      // For now, simulate a bot response after a delay.
-      _chatSessions[_currentChatIndex].add(answer);
-    });
-    print(text);
+        }),
+      );
+
+      var answer = _Message(text: "This is a simulated bot response.", isUser: false, isAnimated: true);
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body) as Map<String, dynamic>;
+        json['isUser'] = false;
+        answer = _Message.fromJson(json)..isAnimated = true; // Set the animation flag
+        print(answer);
+      } else {
+        throw Exception(response.body);
+      }
+
+      setState(() {
+        _chatSessions[_currentChatIndex].add(answer);
+      });
+      print(text);
     } catch (e) {
       print('Error: $e');
     }
     _controller.clear();
 
-  _scrollToBottom();
-  _saveChatHistory(); // Save the chat history after receiving the bot response
-}
+    _scrollToBottom();
+    _saveChatHistory(); // Save the chat history after receiving the bot response
+  }
 
   void _startNewChat() {
     setState(() {
@@ -188,7 +188,7 @@ Future<void> _handleSubmitted(String text) async {
 class _Message {
   final String text;
   final bool isUser;
-  final bool isAnimated;
+  bool isAnimated;
 
   _Message({required this.text, required this.isUser, this.isAnimated = false});
 
@@ -229,27 +229,28 @@ class _MessageWidget extends StatelessWidget {
               color: message.isUser ? Colors.blueAccent : Colors.grey[300],
               borderRadius: BorderRadius.circular(12.0),
             ),
-      child: message.isAnimated
-              ? DefaultTextStyle(
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontFamily: 'popin',
-                ),
-                child: AnimatedTextKit(
-                  isRepeatingAnimation: false,
-                  animatedTexts: [
-                    TyperAnimatedText(
-                      message.text,
-                      speed: Duration(milliseconds: 50),
+            child: message.isAnimated
+                ? DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      fontFamily: 'popin',
                     ),
-                  ],
-                ),
-              )
-            : Text(message.text,
-              style: TextStyle(
-                color: message.isUser ? Colors.white : Colors.black87,
-              ),
-            ),
+                    child: AnimatedTextKit(
+                      isRepeatingAnimation: false,
+                      animatedTexts: [
+                        TyperAnimatedText(
+                          message.text,
+                          speed: Duration(milliseconds: 30),
+                        ),
+                      ],
+                    ),
+                  )
+                : Text(
+                    message.text,
+                    style: TextStyle(
+                      color: message.isUser ? Colors.white : Colors.black87,
+                    ),
+                  ),
           ),
           if (message.isUser) const SizedBox(width: 8.0),
           if (message.isUser)
