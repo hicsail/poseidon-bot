@@ -1,11 +1,11 @@
-
 import 'package:app/widgets/PoseidonAppBar.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.onMenuPressed});
 
   final String title;
+  final VoidCallback onMenuPressed; // Added this to pass the toggleMenu callback
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -23,7 +23,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: widget.title),
+      appBar: CustomAppBar(
+        title: widget.title,
+        onMenuPressed: widget.onMenuPressed,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), 
+      ),
     );
   }
 }

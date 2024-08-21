@@ -1,22 +1,26 @@
-import 'package:app/settingspage.dart';
-import 'package:app/widgets/SlideFromRightMenuRoute.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:app/settingspage.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
   @override
   ChatPageState createState() => ChatPageState();
-} 
+}
 
 const MainColor = Color.fromARGB(255, 173, 232, 245);
 
-class ChatPageState extends State<ChatPage> {
+class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin {
   final List<ChatMessage> messages = [];
   final ScrollController scrollController = ScrollController();
   final TextEditingController textController = TextEditingController();
   final FocusNode focusNode = FocusNode();
+
+  late AnimationController controller;
+  late Animation<Offset> slideAnimation;
+  bool isMenuOpen = false;
 
   @override
   void initState() {
@@ -25,6 +29,18 @@ class ChatPageState extends State<ChatPage> {
       focusNode.requestFocus();
     });
     textController.addListener(updateIconOpacity);
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    slideAnimation = Tween<Offset>(
+      begin: Offset(1.0, 0.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeInOut,
+    ));
   }
 
   @override
@@ -33,6 +49,7 @@ class ChatPageState extends State<ChatPage> {
     textController.dispose();
     focusNode.dispose();
     scrollController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -82,6 +99,17 @@ class ChatPageState extends State<ChatPage> {
     });
   }
 
+  void toggleMenu() {
+    setState(() {
+      if (isMenuOpen) {
+        controller.reverse();
+      } else {
+        controller.forward();
+      }
+      isMenuOpen = !isMenuOpen;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final messageBarHeight = 5.0;
@@ -97,98 +125,127 @@ class ChatPageState extends State<ChatPage> {
             ),
           ),
         ),
-              actions: [
-        IconButton(
-          icon: const Icon(Icons.settings),
-          iconSize: 25,
-          onPressed: () {
-            Navigator.push(
-              context,
-              SlideFromRightMenuRoute(
-                menuWidget: const SettingsPage(),
-              ),
-            );
-          },
-        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: toggleMenu,
+          ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: messageBarHeight),
-              child: ListView.builder(
-                controller: scrollController,
-                padding: const EdgeInsets.all(8.0),
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  return ChatMessageWidget(
-                    message: messages[index],
-                    onAnimationFinished: () {
-                      if (!messages[index].isUser) {
-                        // Handle animation finished for bot messages if needed
-                      }
+          Column(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: messageBarHeight),
+                  child: ListView.builder(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return ChatMessageWidget(
+                        message: messages[index],
+                        onAnimationFinished: () {
+                          if (!messages[index].isUser) {
+                            // Handle animation finished for bot messages if needed
+                          }
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
-          ),
-          SafeArea(
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      focusNode: focusNode,
-                      controller: textController,
-                      decoration: InputDecoration(
-                        hintText: 'Message Poseidon-Bot',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
+              SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          focusNode: focusNode,
+                          controller: textController,
+                          decoration: InputDecoration(
+                            hintText: 'Message Poseidon-Bot',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide(color: MainColor),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
+                          maxLines: 8,
+                          minLines: 1,
+                          keyboardType: TextInputType.multiline,
+                          textInputAction: TextInputAction.send,
+                          onSubmitted: (text) {
+                            if (text.isNotEmpty) {
+                              handleSubmitted(text);
+                            }
+                          },
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(color: MainColor),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                       ),
-                      maxLines: 8,
-                      minLines: 1,
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.send,
-                      onSubmitted: (text) {
-                        if (text.isNotEmpty) {
-                          handleSubmitted(text);
-                        }
+                      Padding(
+                        padding: const EdgeInsets.only(left: 2.0),
+                        child: AnimatedOpacity(
+                          opacity: canSend ? 1.0 : 0.5,
+                          duration: const Duration(milliseconds: 300),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_circle_up_sharp,
+                              color: canSend ? MainColor : Colors.grey,
+                            ),
+                            iconSize: 40.0,
+                            onPressed: canSend ? () {
+                              handleSubmitted(textController.text);
+                            } : null,
+                            highlightColor: MainColor,
+                            hoverColor: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SlideTransition(
+            position: slideAnimation,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 1 / 3, // Right 1/3 of the screen
+                color: Colors.white,
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Menu',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.settings),
+                      title: const Text('Settings'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(builder: (context) => SettingsPage()),
+                        );
                       },
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 2.0),
-                    child: AnimatedOpacity(
-                      opacity: canSend ? 1.0 : 0.5,
-                      duration: const Duration(milliseconds: 300),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_circle_up_sharp,
-                          color: canSend ? MainColor : Colors.grey,
-                        ),
-                        iconSize: 40.0,
-                        onPressed: canSend ? () {
-                          handleSubmitted(textController.text);
-                        } : null,
-                        highlightColor: MainColor,
-                        hoverColor: Colors.transparent,
-                      ),
-                    ),
-                  ),
-                ],
+                    // Add more menu items here
+                  ],
+                ),
               ),
             ),
           ),
