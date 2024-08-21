@@ -246,12 +246,12 @@ class _MessageWidget extends StatelessWidget {
                     ),
                   )
                 : Text(
-                    message.text,
-                    style: TextStyle(
-                      color: message.isUser ? Colors.white : Colors.black87,
-                    ),
-                  ),
-          ),
+               message.text ?? '',
+                 style: TextStyle(
+                  color: message.isUser ? Colors.white : Colors.black87,
+                ),
+              ),
+           ),
           if (message.isUser) const SizedBox(width: 8.0),
           if (message.isUser)
             const CircleAvatar(
