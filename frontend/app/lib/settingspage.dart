@@ -96,8 +96,18 @@ class ThemeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Theme')),
-      body: Center(child: Text('Choose the Main Theme')),
+      appBar: AppBar(title: Text('Settings')),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Change Theme'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ThemeScreen()),
+            );
+          },
+        ),
+      ),
     );
   }
 }
