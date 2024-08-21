@@ -1165,3 +1165,6 @@
 [32mINFO[0m:     [21-08-2024 10:54:35] ::1:51684 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
 [32mINFO[0m:     [21-08-2024 10:55:09] ::1:51698 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
 [32mINFO[0m:     [21-08-2024 10:55:27] ::1:51705 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [21-08-2024 11:46:51] ::1:52604 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [21-08-2024 11:49:50] ::1:52651 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200
+[32mINFO[0m:     [21-08-2024 11:49:59] ::1:52656 - "POST /api/v1/collections/f70b8d1e-d79d-4aac-911f-d0508589653b/query HTTP/1.1" 200

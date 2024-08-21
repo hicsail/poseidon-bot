@@ -240,7 +240,7 @@ class _MessageWidget extends StatelessWidget {
                       animatedTexts: [
                         TyperAnimatedText(
                           message.text,
-                          speed: Duration(milliseconds: 50),
+                          speed: Duration(milliseconds: 30),
                         ),
                       ],
                     ),
