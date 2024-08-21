@@ -26,7 +26,7 @@ class Message(Base):
     __tablename__ = "messages"
 
     id = Column(String, primary_key=True)
-    chat_id = Column(Integer, ForeignKey("chats.id"))
+    chat_id = Column(String, ForeignKey("chats.id"))
     message = Column(String)
     typeOfMessage = Column(String)
 

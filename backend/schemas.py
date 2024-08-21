@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 class MessageBase(BaseModel):
+    chat_id: str
     message: str | None
 
 

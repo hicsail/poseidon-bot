@@ -106,24 +106,29 @@ class _ChatPageState extends State<ChatPage> {
     final response = await http.post(
       Uri.parse('http://localhost:5001/chats'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'title': 'Chat ' + (_chatSessions.length + 1).toString(),
-        'userId': 'asdf',  
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      var json = jsonDecode(response.body) as Map<String, dynamic>;
-      var chat = _Chat.fromJson(json);
-      setState(() {
-        _chatSessions.add(chat);
-        _currentChatIndex = _chatSessions.length - 1;
-      });
-    } else {
-      throw Exception('Failed to start new chat: ${response.body}');
-    }
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'title': 'Chat ' + (_chatSessions.length+1).toString(),
+          'userId': 'asdf',
+        }),);
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          var json = jsonDecode(response.body) as Map<String, dynamic>;
+          var chat = _Chat.fromJson(json);
+          print(_Chat.fromJson(json));
+          _chatSessions.add(chat);
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception(response.body);
+        } setState(() {
+      // For now, simulate a bot response after a delay.
+    });
+      _currentChatIndex = _chatSessions.length - 1;
+    // });
+    _saveChatHistory();
     Navigator.pop(context); // Close the drawer
   }
 
