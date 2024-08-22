@@ -1,6 +1,7 @@
 import chromadb
 
 from sqlalchemy.orm import Session
+import uuid
 
 from . import models, schemas
 
@@ -15,7 +16,7 @@ def get_documents():
     collection = chroma_client.get_or_create_collection(name="my_collection")
     return collection.peek()
 
-def get_user(db: Session, user_id: int):
+def get_user(db: Session, user_id: str):
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 
@@ -35,7 +36,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
-def delete_user(db: Session, user_id: int):
+def delete_user(db: Session, user_id: str):
     db.query(models.User).filter(models.User.id == user_id).delete()
     db.commit()
     return {"message": "User deleted successfully"}
@@ -45,37 +46,55 @@ def get_chats(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Chat).offset(skip).limit(limit).all()
 
 
-def get_chat(db: Session, chat_id: int):
+def get_chat(db: Session, chat_id: str):
     return db.query(models.Chat).filter(models.Chat.id == chat_id).first()
 
 
-def create_user_chat(db: Session, chat: schemas.ChatCreate, user_id: int):
-    db_chat = models.Chat(chat.title, owner_id=user_id)
+def create_user_chat(db: Session, chat: schemas.ChatCreate):
+    myuuid = uuid.uuid4()
+    db_chat = models.Chat(id=str(myuuid), title=chat.title, owner_id=chat.userId)
     db.add(db_chat)
     db.commit()
-    db.refresh(db_chat)
+    # db.refresh(db_chat)
     return db_chat
 
 
-def delete_chat(db: Session, chat_id: int):
+def delete_chat(db: Session, chat_id: str):
     db.query(models.Chat).filter(models.Chat.id == chat_id).delete()
     db.commit()
     return {"message": "Chat deleted successfully"}
 
 
-def get_messages_in_chat(db: Session, owner_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.Message).filter(models.Message.chat_id == owner_id).offset(skip).limit(limit).all()
+def get_messages_in_chat(db: Session, chat_id: str, skip: int = 0, limit: int = 100):
+    history = db.query(models.Message).filter(models.Message.chat_id == chat_id).offset(skip).limit(limit).all()
+    return history
 
 
-def create_message(db: Session, message: schemas.MessageCreate, chat_id: int):
-    db_message = models.Message(**message.model_dump(), chat_id=chat_id)
+def get_user_messages_in_chat(db: Session, chat_id: str, skip: int = 0, limit: int = 100):
+    history = db.query(models.Message).filter(models.Message.chat_id == chat_id).filter(models.Message.typeOfMessage == "user").offset(skip).limit(limit).all()
+    messages = [msg.message for msg in history]
+    return messages
+
+
+def get_assistant_messages_in_chat(db: Session, chat_id: str, skip: int = 0, limit: int = 100):
+    history = db.query(models.Message).filter(models.Message.chat_id == chat_id).filter(models.Message.typeOfMessage == "assistant").offset(skip).limit(limit).all()
+    messages = [msg.message for msg in history]
+    return messages
+
+
+def create_message(db: Session, message: str, chat_id: str, typeOfMessage: str):
+    print(chat_id)
+    myuuid = uuid.uuid4()
+    db_message = models.Message(id=myuuid, message=message, chat_id=chat_id, typeOfMessage=typeOfMessage)
+    print(db)
+    print(db_message)
     db.add(db_message)
     db.commit()
-    db.refresh(db_message)
+    # db.refresh(db_message)
     return db_message
 
 
-def delete_message(db: Session, message_id: int):
+def delete_message(db: Session, message_id: str):
     db.query(models.Message).filter(models.Message.id == message_id).delete()
     db.commit()
     return {"message": "Message deleted successfully"}  

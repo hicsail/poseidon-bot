@@ -1,18 +1,18 @@
 from pydantic import BaseModel
 
 class MessageBase(BaseModel):
-    title: str
-    message: str | None = None
-    typeOfMessage: str | None = None
+    chat_id: str
+    message: str | None
 
 
 class MessageCreate(MessageBase):
+    chat_id: str
     message: str
 
 
 class Message(MessageBase):
-    id: int
-    chat_id: int
+    id: str
+    chat_id: str
 
     class Config:
         orm_mode = True
@@ -22,12 +22,13 @@ class ChatBase(BaseModel):
 
 
 class ChatCreate(ChatBase):
-    pass
+    title: str
+    userId: str
 
 
 class Chat(ChatBase):
-    id: int
-    owner_id: int
+    id: str
+    owner_id: str
     messages: list[Message] = []
 
     class Config:
@@ -43,7 +44,7 @@ class UserCreate(UserBase):
 
 
 class User(UserBase):
-    id: int
+    id: str
     is_active: bool
     chats: list[Chat] = []
 
