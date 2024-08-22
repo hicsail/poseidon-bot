@@ -23,88 +23,108 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _loadChatHistory() async {
-    final response = await http.get(
-      Uri.parse('http://localhost:5001/chats'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var json = jsonDecode(response.body) as List<dynamic>;
-      setState(() {
-        _chatSessions.clear();
-        _chatSessions.addAll(json.map((chat) => _Chat.fromJson(chat)).toList());
-      });
-    } else {
-      throw Exception('Failed to load chat history: ${response.body}');
-    }
+    final prefs = await SharedPreferences.getInstance();
+    final chatData = prefs.getString('chat_sessions');
+     setState(() {
+      _chatSessions.clear();
+      _chatSessions.add(_Chat(messages: [_Message(text: "asdf", isUser: false)], title: "Chat 1", id: "0"));
+    });
+      final response = await http.get(Uri.parse('http://localhost:5001/chats'),
+     headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },);
+       var answer = _Message(text: "This is a simulated bot response.", isUser: false);
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          var json = jsonDecode(response.body) as List<_Chat>;
+          print(json);
+          _chatSessions.addAll(json);
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception(response.body);
+        }
+    // if (chatData != null) {
+    //   final List<dynamic> decodedData = jsonDecode(chatData);
+    //   setState(() {
+    //     _chatSessions.clear();
+    //     _chatSessions.addAll(decodedData.map((chat) => (_Chat.fromJson(chat))).toList());
+    //   });
+    // }
   }
 
   Future<void> _saveChatHistory() async {
-    final response = await http.post(
-      Uri.parse('http://localhost:5001/chats/${_chatSessions[_currentChatIndex].id}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'message': _chatSessions[_currentChatIndex].messages.last.text,
-        'chat_id': _chatSessions[_currentChatIndex].id,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      var json = jsonDecode(response.body) as Map<String, dynamic>;
-      var answer = _Message.fromJson(json);
-      setState(() {
-        _chatSessions[_currentChatIndex].messages.add(answer);
-      });
-    } else {
-      throw Exception('Failed to save chat history: ${response.body}');
-    }
+    // final prefs = await SharedPreferences.getInstance();
+    print(_chatSessions[_currentChatIndex].id);
+    final response = await http.post(Uri.parse('http://localhost:5001/chats/${_chatSessions[_currentChatIndex].id}'),
+     headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'chat_id': _chatSessions[_currentChatIndex].id,
+          'message': _chatSessions[_currentChatIndex].messages.last.text,
+        }),);
+       var answer = _Message(text: "This is a simulated bot response.", isUser: false);
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          var json = jsonDecode(response.body) as Map<String, dynamic>;
+          json['isUser'] = false;
+          answer = _Message.fromJson(json);
+          print(answer);
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception(response.body);
+        }
   }
 
-  Future<void> _handleSubmitted(String text) async {
-    if (text.isEmpty) return;
+Future<void> _handleSubmitted(String text) async {
+  if (text.isEmpty) return;
+  setState(() {
+    _chatSessions[_currentChatIndex].messages.add(_Message(text: text, isUser: true));
+  });
+  _controller.clear();
+  _scrollToBottom();
 
-    setState(() {
-      _chatSessions[_currentChatIndex].messages.add(_Message(text: text, isUser: true));
-    });
-    _controller.clear();
-    _scrollToBottom();
-
-    try {
-      final response = await http.post(
-        Uri.parse('http://localhost:5001/query'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+   try {
+       final response = await http.post(Uri.parse('http://localhost:5001/query'), 
+       headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
           'query': text,
-          'chat_id': _chatSessions[_currentChatIndex].id,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body) as Map<String, dynamic>;
-        var answer = _Message.fromJson(json);
-        setState(() {
-          _chatSessions[_currentChatIndex].messages.add(answer);
-        });
-      } else {
-        throw Exception('Failed to submit query: ${response.body}');
-      }
+        }),);
+       var answer = _Message(text: "This is a simulated bot response.", isUser: false);
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          var json = jsonDecode(response.body) as Map<String, dynamic>;
+          json['isUser'] = false;
+          answer = _Message.fromJson(json);
+          print(answer);
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception(response.body);
+        } setState(() {
+      // For now, simulate a bot response after a delay.
+      _chatSessions[_currentChatIndex].messages.add(answer);
+    });
+    print(text);
     } catch (e) {
       print('Error: $e');
     }
+    _controller.clear();
 
-    _scrollToBottom();
-    _saveChatHistory();  // Save the chat history after receiving the bot response
-  }
+  _scrollToBottom();
+  _saveChatHistory(); // Save the chat history after receiving the bot response
+}
 
-  Future<void> _startNewChat() async {
-    final response = await http.post(
-      Uri.parse('http://localhost:5001/chats'),
+  void _startNewChat() async {
+    // setState(() async {
+      final response = await http.post(Uri.parse('http://localhost:5001/chats'), 
       headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -255,7 +275,7 @@ class _Chat {
         'title': title,
         'id': id,
       };
-
+  
   factory _Chat.fromJson(Map<String, dynamic> json) => _Chat(
         messages: (json['messages'] as List<dynamic>).map((msg) => _Message.fromJson(msg)).toList(),
         title: json['title'],
