@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
-from typing import Union
-from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from typing import Annotated, Union
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -9,6 +9,7 @@ from . import crud, models, schemas, database
 import ollama
 import uuid
 import chromadb
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
@@ -57,6 +58,10 @@ class DeleteMessageInput(BaseModel):
 class DeleteChatInput(BaseModel):
     chat_id: str
  
+class DocumentInput(BaseModel):
+    document: str
+    id: str
+
 @app.post('/query')
 def query(input: Input, db: Session = Depends(get_db)):
     try:
@@ -192,6 +197,13 @@ def read_user(user_id: str, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+@app.post("/documents/")
+def create_document(file: UploadFile):
+    contents = file.file.read()
+    document = contents.decode('utf-8')
+    print(document)
+    return {"file_size": file.filename}
 
 app.add_middleware(
     CORSMiddleware,
