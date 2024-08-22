@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:app/homepage.dart';
+import 'package:app/widgets/SlideFromRightPageRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -20,8 +22,6 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     _loadChats();
-    print(_chatSessions);
-    // _loadChatHistory();
   }
 
   Future<void> _loadChats() async {
@@ -31,12 +31,9 @@ class _ChatPageState extends State<ChatPage> {
       'Content-Type': 'application/json; charset=UTF-8',
         },);
         if (response.statusCode == 200) {
-          print("decoding");
           var json = jsonDecode(response.body) as List<dynamic>;
-          print(json);
           for(var chat in json) {
             chats.add(_Chat.fromJson(chat));
-            print(_Chat.fromJson(chat).title);
           }
           setState(() {
             _chatSessions.clear();
@@ -50,7 +47,7 @@ class _ChatPageState extends State<ChatPage> {
 Future<void> _handleSubmitted(String text) async {
   if (text.isEmpty) return;
   setState(() {
-    _chatSessions[_currentChatIndex].messages.add(_Message(message: text, isUser: true, chatId: _chatSessions[_currentChatIndex].chat_id));
+    _chatSessions[_currentChatIndex].messages.add(_Message(message: text, isUser: true, chatId: _chatSessions[_currentChatIndex].chat_id, id: "0"));
   });
   _controller.clear();
   _scrollToBottom();
@@ -64,14 +61,13 @@ Future<void> _handleSubmitted(String text) async {
           'query': text,
           'chat_id': _chatSessions[_currentChatIndex].chat_id,
         }),);
-       var answer = _Message(message: "This is a simulated bot response.", isUser: false, chatId: "0");
+       var answer = _Message(message: "This is a simulated bot response.", isUser: false, chatId: "0", id:"0");
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response,
           // then parse the JSON.
           var json = jsonDecode(response.body) as Map<String, dynamic>;
           json['isUser'] = false;
           answer = _Message.fromJson(json);
-          print(answer);
           setState(() {
             // For now, simulate a bot response after a delay.
             _chatSessions[_currentChatIndex].messages.add(answer);
@@ -81,7 +77,6 @@ Future<void> _handleSubmitted(String text) async {
           // then throw an exception.
           throw Exception(response.body);
         } 
-    print(text);
     } catch (e) {
       print('Error: $e');
     }
@@ -97,17 +92,15 @@ Future<void> _handleSubmitted(String text) async {
       'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'title': 'Chat ' + (_chatSessions.length+1).toString(),
-          'userId': 'asdf',
+          'chat_title': 'Chat ' + (_chatSessions.length+1).toString(),
+          'user_id': 'asdf',
         }),);
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response,
           // then parse the JSON.
           var json = jsonDecode(response.body) as Map<String, dynamic>;
           var chat = _Chat.fromJson(json);
-          print(_Chat.fromJson(json));
           _chatSessions.add(chat);
-          print(_chatSessions);
         } else {
           // If the server did not return a 200 OK response,
           // then throw an exception.
@@ -116,8 +109,41 @@ Future<void> _handleSubmitted(String text) async {
       // For now, simulate a bot response after a delay.
     });
       _currentChatIndex = _chatSessions.length - 1;
-    // });
     Navigator.pop(context); // Close the drawer
+  }
+
+   Future<void> handleDelete(String messageId) async {
+    final response = await http.delete(Uri.parse('http://localhost:5001/messages/'), 
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'message_id': messageId,
+        }),
+      );
+        if (response.statusCode == 200) {
+          print('Message deleted');
+          _loadChats();
+        } else {
+          throw Exception(response.body);
+        }
+  }
+
+  Future<void> handleChatDelete(String chatId) async {
+    final response = await http.delete(Uri.parse('http://localhost:5001/chats/'), 
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'chat_id': chatId,
+        }),
+      );
+        if (response.statusCode == 200) {
+          print('Chat deleted');
+          _loadChats();
+        } else {
+          throw Exception(response.body);
+        }
   }
 
   void _switchChat(int index) {
@@ -144,6 +170,16 @@ Future<void> _handleSubmitted(String text) async {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 173, 232, 245),
         title: const Text('Poseidon Bot', style: TextStyle(color: Colors.white)),
+        actions: [
+        IconButton(
+          icon: const Icon(Icons.home),
+          iconSize: 25,
+          onPressed: () {
+            Navigator.push(context, SlideFromRightPageRoute(widget: const MyHomePage(title:"Home")));
+          },
+          alignment: FractionalOffset.topRight,
+        ),
+      ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -154,14 +190,18 @@ Future<void> _handleSubmitted(String text) async {
                 color: Color.fromARGB(255, 129, 241, 194),
               ),
               child: Text(
-                'Past Chats',
+                'All Chats',
                 style: TextStyle(color: Color.fromARGB(192, 115, 115, 115), fontSize: 24),
               ),
             ),
             for (int i = 0; i < _chatSessions.length; i++)
               ListTile(
-                title: Text('Chat ${i + 1}'),
+                title: Text( _chatSessions[i].title),
                 onTap: () => _switchChat(i),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => handleChatDelete(_chatSessions[i].chat_id),
+                ),
               ),
             ListTile(
               leading: const Icon(Icons.add),
@@ -179,8 +219,30 @@ Future<void> _handleSubmitted(String text) async {
               controller: _scrollController,
               itemCount: _chatSessions[_currentChatIndex].messages.length,
               itemBuilder: (context, index) {
-                return _MessageWidget(
-                  message: _chatSessions[_currentChatIndex].messages[index],
+                return Column (
+                  children: [
+                    _MessageWidget(
+                      message: _chatSessions[_currentChatIndex].messages[index],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment:
+                          _chatSessions[_currentChatIndex].messages[index].isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                      children: <Widget>[
+                    Container(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            iconSize: 25,
+                            onPressed: () => handleDelete(_chatSessions[_currentChatIndex].messages[index].id),
+                            alignment: _chatSessions[_currentChatIndex].messages[index].isUser ? FractionalOffset.topLeft : FractionalOffset.topRight,
+                        ),
+                      ),
+                    ),
+                    ],
+                    ),
+                  ],
                 );
               },
             ),
@@ -217,8 +279,9 @@ class _Message {
   final String message;
   final bool isUser;
   final String chatId;
+  final String id;
 
-  _Message({required this.message, required this.isUser, required this.chatId});
+  _Message({required this.message, required this.isUser, required this.chatId, required this.id});
 
   Map<String, dynamic> toJson() => {
         'message': message,
@@ -230,6 +293,7 @@ class _Message {
         message: json['message'],
         chatId: json['chat_id'],
         isUser: json['typeOfMessage'] == 'user',
+        id: json['id'],
       );
 }
 
@@ -243,8 +307,8 @@ class _Chat {
 
   Map<String, dynamic> toJson() => {
         'messages': messages.map((msg) => msg.toJson()).toList(),
-        'title': title,
-        'owner_id': owner_id,
+        'chat_title': title,
+        'user_id': owner_id,
       };
   
   factory _Chat.fromJson(Map<String, dynamic> json) => _Chat(
@@ -263,7 +327,8 @@ class _MessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
+      child: Column(
+        children: <Widget>[Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment:
             message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -296,6 +361,7 @@ class _MessageWidget extends StatelessWidget {
             ),
         ],
       ),
+    ]),
     );
   }
 }
