@@ -54,32 +54,6 @@ class _ChatPageState extends State<ChatPage> {
     // }
   }
 
-  Future<void> _saveChatHistory() async {
-    // final prefs = await SharedPreferences.getInstance();
-    print(_chatSessions[_currentChatIndex].id);
-    // final response = await http.post(Uri.parse('http://localhost:5001/chats/${_chatSessions[_currentChatIndex].id}'),
-    //  headers: <String, String>{
-    //   'Content-Type': 'application/json; charset=UTF-8',
-    //     },
-    //     body: jsonEncode(<String, dynamic>{
-    //       'chat_id': _chatSessions[_currentChatIndex].id,
-    //       'message': _chatSessions[_currentChatIndex].messages.last.text,
-    //     }),);
-    //    var answer = _Message(text: "This is a simulated bot response.", isUser: false);
-    //     if (response.statusCode == 200) {
-    //       // If the server did return a 200 OK response,
-    //       // then parse the JSON.
-    //       var json = jsonDecode(response.body) as Map<String, dynamic>;
-    //       json['isUser'] = false;
-    //       answer = _Message.fromJson(json);
-    //       print(answer);
-    //     } else {
-    //       // If the server did not return a 200 OK response,
-    //       // then throw an exception.
-    //       throw Exception(response.body);
-    //     }
-  }
-
 Future<void> _handleSubmitted(String text) async {
   if (text.isEmpty) return;
   setState(() {
@@ -119,7 +93,6 @@ Future<void> _handleSubmitted(String text) async {
     _controller.clear();
 
   _scrollToBottom();
-  _saveChatHistory(); // Save the chat history after receiving the bot response
 }
 
   void _startNewChat() async {
@@ -149,7 +122,6 @@ Future<void> _handleSubmitted(String text) async {
     });
       _currentChatIndex = _chatSessions.length - 1;
     // });
-    _saveChatHistory();
     Navigator.pop(context); // Close the drawer
   }
 
