@@ -129,6 +129,23 @@ Future<void> _handleSubmitted(String text) async {
         }
   }
 
+  Future<void> handleChatDelete(String chatId) async {
+    final response = await http.delete(Uri.parse('http://localhost:5001/chats/'), 
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'chat_id': chatId,
+        }),
+      );
+        if (response.statusCode == 200) {
+          print('Chat deleted');
+          _loadChats();
+        } else {
+          throw Exception(response.body);
+        }
+  }
+
   void _switchChat(int index) {
     setState(() {
       _currentChatIndex = index;
@@ -173,7 +190,7 @@ Future<void> _handleSubmitted(String text) async {
                 color: Color.fromARGB(255, 129, 241, 194),
               ),
               child: Text(
-                'Past Chats',
+                'All Chats',
                 style: TextStyle(color: Color.fromARGB(192, 115, 115, 115), fontSize: 24),
               ),
             ),
@@ -181,6 +198,10 @@ Future<void> _handleSubmitted(String text) async {
               ListTile(
                 title: Text( _chatSessions[i].title),
                 onTap: () => _switchChat(i),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => handleChatDelete(_chatSessions[i].chat_id),
+                ),
               ),
             ListTile(
               leading: const Icon(Icons.add),

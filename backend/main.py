@@ -53,6 +53,9 @@ class ChatInput(BaseModel):
 
 class DeleteMessageInput(BaseModel):
     message_id: str
+
+class DeleteChatInput(BaseModel):
+    chat_id: str
  
 @app.post('/query')
 def query(input: Input, db: Session = Depends(get_db)):
@@ -125,7 +128,7 @@ def get_root():
     return {"Hello": "World"}
 
 @app.get("/chats/{chat_id}")
-def get_messages(chat_id: str, q: str = None):
+def get_messages(chat_id: str):
     #read data from database
     return {"chat_id": chat_id, "q": q}
 
@@ -166,10 +169,10 @@ def delete_message(input: DeleteMessageInput, db: Session = Depends(get_db)):
     message = crud.delete_message(db, input.message_id)
     return {"message": message}
 
-@app.delete("/chats/{chat_id}")
-def delete_chat(chat_id: str):
-    #delete data from database
-    return {"chat_id": chat_id}
+@app.delete("/chats/")
+def delete_chat(input: DeleteChatInput, db: Session = Depends(get_db)):
+    message = crud.delete_chat(db, input.chat_id)
+    return {"message": message}
 
 @app.post("/users", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
