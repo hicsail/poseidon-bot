@@ -52,6 +52,7 @@ if __name__ == "__main__":
 # client = chromadb.PersistentClient(path="backend/temp.data")
 class Input(BaseModel):
     query: str
+    chat_id: str
 
 class ChatInput(BaseModel):
     chat_id: str
@@ -71,7 +72,7 @@ def query(input: Input, db: Session = Depends(get_db)):
             'role': 'user',
             'content': document,
             })
-        chat_history = crud.get_messages_in_chat(db, chat_id="0")
+        chat_history = crud.get_messages_in_chat(db, chat_id=input.chat_id)
         for chat_message in chat_history:
             messages.append({
             'role': chat_message.typeOfMessage,
@@ -93,12 +94,15 @@ def query(input: Input, db: Session = Depends(get_db)):
             print(part, end='', flush=True)
             response = response + part
         print(response)
-        parsed_response = {
-            'text': response,
-        }
         
-        crud.create_message(db, message=input.query, chat_id="0", typeOfMessage="user")
-        crud.create_message(db, message=response, chat_id="0", typeOfMessage="assistant")
+        crud.create_message(db, message=input.query, chat_id=input.chat_id, typeOfMessage="user")
+        crud.create_message(db, message=response, chat_id=input.chat_id, typeOfMessage="assistant")
+
+        parsed_response = {
+            "message": response,
+            "chat_id": "0",
+            "typeOfMessage": "assistant",
+        }
 
         return JSONResponse(content=parsed_response)
     except Exception as e:
@@ -130,7 +134,24 @@ def get_messages(chat_id: str, q: str = None):
 @app.get("/chats")
 def get_chats(db: Session = Depends(get_db)):
     chats = crud.get_chats(db)
-    return {"chat_title": chats[0].title + chats[1].title}
+    response = []
+    for chat in chats:
+        messages = crud.get_messages_in_chat(db, chat.id)
+        print(messages)
+        json_messages = []
+        for message in messages:
+            json_messages.append({
+                "message": message.message,
+                "chat_id": message.chat_id,
+                "typeOfMessage": message.typeOfMessage
+            })
+        response.append({
+            "chat_id": chat.id,
+            "title": chat.title,
+            "owner_id": chat.owner_id,
+            "messages": json_messages
+        })
+    return response
 
 @app.post("/chats/{chat_id}")
 def create_message(input: ChatInput, db: Session = Depends(get_db)):
