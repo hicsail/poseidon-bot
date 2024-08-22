@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:app/homepage.dart';
+import 'package:app/widgets/SlideFromRightPageRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -134,6 +136,16 @@ Future<void> _handleSubmitted(String text) async {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 173, 232, 245),
         title: const Text('Poseidon Bot', style: TextStyle(color: Colors.white)),
+        actions: [
+        IconButton(
+          icon: const Icon(Icons.home),
+          iconSize: 25,
+          onPressed: () {
+            Navigator.push(context, SlideFromRightPageRoute(widget: const MyHomePage(title:"Home")));
+          },
+          alignment: FractionalOffset.topRight,
+        ),
+      ],
       ),
       drawer: Drawer(
         child: ListView(
