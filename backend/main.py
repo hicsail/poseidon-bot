@@ -30,6 +30,13 @@ chroma_client = chromadb.HttpClient(host='localhost', port=8000)
 collection = chroma_client.get_or_create_collection(name="my_collection")
 collection.add(documents=documents, ids=['0', '1'])
 
+def get_db():
+    db = database.SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 def main():
     # embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
     # embeddings = embedding_function(documents)
@@ -51,31 +58,49 @@ class ChatInput(BaseModel):
     message: str
  
 @app.post('/query')
-def query(input: Input):
+def query(input: Input, db: Session = Depends(get_db)):
     try:
         chroma_result = collection.query(
             query_texts=input.query,
             n_results=2
         )
 
-        print(chroma_result)
-        print(chroma_result['documents'][0][0])
-
+        messages = []
+        for document in chroma_result['documents'][0]:
+            messages.append({
+            'role': 'user',
+            'content': document,
+            })
+        chat_history = crud.get_messages_in_chat(db, chat_id="0")
+        for chat_message in chat_history:
+            messages.append({
+            'role': chat_message.typeOfMessage,
+            'content': chat_message.message,
+            })
+        messages.append({
+            'role': 'user',
+            'content': input.query,
+        })
+        print(messages)
         ollama_result = ollama.chat(
             model='llama3.1',
-            messages=[{'role': 'user', 'content': chroma_result['documents'][0][0] + input.query}],
+            messages=messages,
+            stream=True,
         )
-
-        print(ollama_result["message"]["content"])
-
-        response = {
-            'text': ollama_result["message"]["content"],
+        response = ""
+        for chunk in ollama_result:
+            part = chunk['message']['content']
+            print(part, end='', flush=True)
+            response = response + part
+        print(response)
+        parsed_response = {
+            'text': response,
         }
+        
+        crud.create_message(db, message=input.query, chat_id="0", typeOfMessage="user")
+        crud.create_message(db, message=response, chat_id="0", typeOfMessage="assistant")
 
-        db = get_db()
-        # crud.create_message(db, schemas.MessageCreate(chat_id=0, message=response['text']))
-
-        return JSONResponse(content=response)
+        return JSONResponse(content=parsed_response)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -93,13 +118,6 @@ async def lifespan(app: FastAPI):
 async def root():
     return {"message": "Hello World"}
 
-def get_db():
-    db = database.SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 @app.get("/")
 def get_root():
     return {"Hello": "World"}
@@ -116,7 +134,6 @@ def get_chats(db: Session = Depends(get_db)):
 
 @app.post("/chats/{chat_id}")
 def create_message(input: ChatInput, db: Session = Depends(get_db)):
-    print("AFFHLSKJDFHLSKDJFHLSDKJDFHS")
     crud.create_message(input.message, input.chat_id, db)
     return {"chat_title": input.chat_id, "message": input.message}
 
