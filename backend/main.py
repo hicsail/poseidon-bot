@@ -5,14 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-# import crud, models, schemas, database
 from . import crud, models, schemas, database
 import ollama
-
-# from .embeddings import LlamaEmbeddingFunction
+import uuid
 import chromadb
-# from chromadb.server import Server
-# from embeddings import LlamaEmbeddingFunction
 
 models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
@@ -38,18 +34,11 @@ def get_db():
         db.close()
 
 def main():
-    # embedding_function = LlamaEmbeddingFunction(model_name="huggingface/llama")
-    # embeddings = embedding_function(documents)
-    # print(embeddings)      
-
-    # server = Server(host='localhost', port=8000)
-    # server.start()
     print("HI")
 
 if __name__ == "__main__":
     main()
 
-# client = chromadb.PersistentClient(path="backend/temp.data")
 class Input(BaseModel):
     query: str
     chat_id: str
@@ -61,6 +50,9 @@ class MessageInput(BaseModel):
 class ChatInput(BaseModel):
     chat_title: str
     user_id: str
+
+class DeleteMessageInput(BaseModel):
+    message_id: str
  
 @app.post('/query')
 def query(input: Input, db: Session = Depends(get_db)):
@@ -99,13 +91,15 @@ def query(input: Input, db: Session = Depends(get_db)):
             response = response + part
         print(response)
         
-        crud.create_message(db, message=input.query, chat_id=input.chat_id, typeOfMessage="user")
-        crud.create_message(db, message=response, chat_id=input.chat_id, typeOfMessage="assistant")
+        crud.create_message(db, id=str(uuid.uuid4()), message=input.query, chat_id=input.chat_id, typeOfMessage="user")
+        response_id = uuid.uuid4()
+        crud.create_message(db, id=response_id, message=response, chat_id=input.chat_id, typeOfMessage="assistant")
 
         parsed_response = {
             "message": response,
-            "chat_id": "0",
+            "chat_id": input.chat_id,
             "typeOfMessage": "assistant",
+            "id": str(response_id)
         }
 
         return JSONResponse(content=parsed_response)
@@ -146,7 +140,8 @@ def get_chats(db: Session = Depends(get_db)):
             json_messages.append({
                 "message": message.message,
                 "chat_id": message.chat_id,
-                "typeOfMessage": message.typeOfMessage
+                "typeOfMessage": message.typeOfMessage,
+                "id": message.id
             })
         response.append({
             "chat_id": chat.id,
@@ -166,10 +161,10 @@ def create_chat(input: ChatInput, db: Session = Depends(get_db)):
     chat = crud.create_user_chat(db, input.chat_title, input.user_id)
     return {"title": chat.title, "owner_id": chat.owner_id, "chat_id": chat.id, "messages":[]}
 
-@app.delete("/messages/{message_id}")
-def delete_message(message_id: str):
-    #delete data from database
-    return {"message_id": message_id}
+@app.delete("/messages/")
+def delete_message(input: DeleteMessageInput, db: Session = Depends(get_db)):
+    message = crud.delete_message(db, input.message_id)
+    return {"message": message}
 
 @app.delete("/chats/{chat_id}")
 def delete_chat(chat_id: str):

@@ -47,7 +47,7 @@ class _ChatPageState extends State<ChatPage> {
 Future<void> _handleSubmitted(String text) async {
   if (text.isEmpty) return;
   setState(() {
-    _chatSessions[_currentChatIndex].messages.add(_Message(message: text, isUser: true, chatId: _chatSessions[_currentChatIndex].chat_id));
+    _chatSessions[_currentChatIndex].messages.add(_Message(message: text, isUser: true, chatId: _chatSessions[_currentChatIndex].chat_id, id: "0"));
   });
   _controller.clear();
   _scrollToBottom();
@@ -61,7 +61,7 @@ Future<void> _handleSubmitted(String text) async {
           'query': text,
           'chat_id': _chatSessions[_currentChatIndex].chat_id,
         }),);
-       var answer = _Message(message: "This is a simulated bot response.", isUser: false, chatId: "0");
+       var answer = _Message(message: "This is a simulated bot response.", isUser: false, chatId: "0", id:"0");
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response,
           // then parse the JSON.
@@ -110,6 +110,23 @@ Future<void> _handleSubmitted(String text) async {
     });
       _currentChatIndex = _chatSessions.length - 1;
     Navigator.pop(context); // Close the drawer
+  }
+
+   Future<void> handleDelete(String messageId) async {
+    final response = await http.delete(Uri.parse('http://localhost:5001/messages/'), 
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'message_id': messageId,
+        }),
+      );
+        if (response.statusCode == 200) {
+          print('Message deleted');
+          _loadChats();
+        } else {
+          throw Exception(response.body);
+        }
   }
 
   void _switchChat(int index) {
@@ -181,8 +198,30 @@ Future<void> _handleSubmitted(String text) async {
               controller: _scrollController,
               itemCount: _chatSessions[_currentChatIndex].messages.length,
               itemBuilder: (context, index) {
-                return _MessageWidget(
-                  message: _chatSessions[_currentChatIndex].messages[index],
+                return Column (
+                  children: [
+                    _MessageWidget(
+                      message: _chatSessions[_currentChatIndex].messages[index],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment:
+                          _chatSessions[_currentChatIndex].messages[index].isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                      children: <Widget>[
+                    Container(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            iconSize: 25,
+                            onPressed: () => handleDelete(_chatSessions[_currentChatIndex].messages[index].id),
+                            alignment: _chatSessions[_currentChatIndex].messages[index].isUser ? FractionalOffset.topLeft : FractionalOffset.topRight,
+                        ),
+                      ),
+                    ),
+                    ],
+                    ),
+                  ],
                 );
               },
             ),
@@ -219,8 +258,9 @@ class _Message {
   final String message;
   final bool isUser;
   final String chatId;
+  final String id;
 
-  _Message({required this.message, required this.isUser, required this.chatId});
+  _Message({required this.message, required this.isUser, required this.chatId, required this.id});
 
   Map<String, dynamic> toJson() => {
         'message': message,
@@ -232,6 +272,7 @@ class _Message {
         message: json['message'],
         chatId: json['chat_id'],
         isUser: json['typeOfMessage'] == 'user',
+        id: json['id'],
       );
 }
 
@@ -265,7 +306,8 @@ class _MessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
+      child: Column(
+        children: <Widget>[Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment:
             message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -298,6 +340,7 @@ class _MessageWidget extends StatelessWidget {
             ),
         ],
       ),
+    ]),
     );
   }
 }

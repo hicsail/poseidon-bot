@@ -82,12 +82,8 @@ def get_assistant_messages_in_chat(db: Session, chat_id: str, skip: int = 0, lim
     return messages
 
 
-def create_message(db: Session, message: str, chat_id: str, typeOfMessage: str):
-    print(chat_id)
-    myuuid = uuid.uuid4()
-    db_message = models.Message(id=myuuid, message=message, chat_id=chat_id, typeOfMessage=typeOfMessage)
-    print(db)
-    print(db_message)
+def create_message(db: Session, id: str, message: str, chat_id: str, typeOfMessage: str):
+    db_message = models.Message(id=id, message=message, chat_id=chat_id, typeOfMessage=typeOfMessage)
     db.add(db_message)
     db.commit()
     # db.refresh(db_message)
