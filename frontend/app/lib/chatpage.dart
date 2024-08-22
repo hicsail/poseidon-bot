@@ -20,8 +20,6 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     _loadChats();
-    print(_chatSessions);
-    // _loadChatHistory();
   }
 
   Future<void> _loadChats() async {
@@ -31,12 +29,9 @@ class _ChatPageState extends State<ChatPage> {
       'Content-Type': 'application/json; charset=UTF-8',
         },);
         if (response.statusCode == 200) {
-          print("decoding");
           var json = jsonDecode(response.body) as List<dynamic>;
-          print(json);
           for(var chat in json) {
             chats.add(_Chat.fromJson(chat));
-            print(_Chat.fromJson(chat).title);
           }
           setState(() {
             _chatSessions.clear();
@@ -71,7 +66,6 @@ Future<void> _handleSubmitted(String text) async {
           var json = jsonDecode(response.body) as Map<String, dynamic>;
           json['isUser'] = false;
           answer = _Message.fromJson(json);
-          print(answer);
           setState(() {
             // For now, simulate a bot response after a delay.
             _chatSessions[_currentChatIndex].messages.add(answer);
@@ -81,7 +75,6 @@ Future<void> _handleSubmitted(String text) async {
           // then throw an exception.
           throw Exception(response.body);
         } 
-    print(text);
     } catch (e) {
       print('Error: $e');
     }
@@ -97,17 +90,15 @@ Future<void> _handleSubmitted(String text) async {
       'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'title': 'Chat ' + (_chatSessions.length+1).toString(),
-          'userId': 'asdf',
+          'chat_title': 'Chat ' + (_chatSessions.length+1).toString(),
+          'user_id': 'asdf',
         }),);
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response,
           // then parse the JSON.
           var json = jsonDecode(response.body) as Map<String, dynamic>;
           var chat = _Chat.fromJson(json);
-          print(_Chat.fromJson(json));
           _chatSessions.add(chat);
-          print(_chatSessions);
         } else {
           // If the server did not return a 200 OK response,
           // then throw an exception.
@@ -116,7 +107,6 @@ Future<void> _handleSubmitted(String text) async {
       // For now, simulate a bot response after a delay.
     });
       _currentChatIndex = _chatSessions.length - 1;
-    // });
     Navigator.pop(context); // Close the drawer
   }
 
@@ -243,8 +233,8 @@ class _Chat {
 
   Map<String, dynamic> toJson() => {
         'messages': messages.map((msg) => msg.toJson()).toList(),
-        'title': title,
-        'owner_id': owner_id,
+        'chat_title': title,
+        'user_id': owner_id,
       };
   
   factory _Chat.fromJson(Map<String, dynamic> json) => _Chat(

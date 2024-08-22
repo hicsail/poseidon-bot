@@ -54,9 +54,13 @@ class Input(BaseModel):
     query: str
     chat_id: str
 
-class ChatInput(BaseModel):
+class MessageInput(BaseModel):
     chat_id: str
     message: str
+
+class ChatInput(BaseModel):
+    chat_title: str
+    user_id: str
  
 @app.post('/query')
 def query(input: Input, db: Session = Depends(get_db)):
@@ -137,7 +141,6 @@ def get_chats(db: Session = Depends(get_db)):
     response = []
     for chat in chats:
         messages = crud.get_messages_in_chat(db, chat.id)
-        print(messages)
         json_messages = []
         for message in messages:
             json_messages.append({
@@ -154,14 +157,14 @@ def get_chats(db: Session = Depends(get_db)):
     return response
 
 @app.post("/chats/{chat_id}")
-def create_message(input: ChatInput, db: Session = Depends(get_db)):
+def create_message(input: MessageInput, db: Session = Depends(get_db)):
     crud.create_message(input.message, input.chat_id, db)
     return {"chat_title": input.chat_id, "message": input.message}
 
 @app.post("/chats")
-def create_chat(input: schemas.ChatCreate, db: Session = Depends(get_db)):
-    chat = crud.create_user_chat(db, input)
-    return {"chat_title": input.title, "userId": input.userId, "chat_id": chat.id}
+def create_chat(input: ChatInput, db: Session = Depends(get_db)):
+    chat = crud.create_user_chat(db, input.chat_title, input.user_id)
+    return {"title": chat.title, "owner_id": chat.owner_id, "chat_id": chat.id, "messages":[]}
 
 @app.delete("/messages/{message_id}")
 def delete_message(message_id: str):

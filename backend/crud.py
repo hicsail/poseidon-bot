@@ -50,9 +50,9 @@ def get_chat(db: Session, chat_id: str):
     return db.query(models.Chat).filter(models.Chat.id == chat_id).first()
 
 
-def create_user_chat(db: Session, chat: schemas.ChatCreate):
+def create_user_chat(db: Session, chat_title: str, user_id: str):
     myuuid = uuid.uuid4()
-    db_chat = models.Chat(id=str(myuuid), title=chat.title, owner_id=chat.userId)
+    db_chat = models.Chat(id=str(myuuid), title=chat_title, owner_id=user_id)
     db.add(db_chat)
     db.commit()
     # db.refresh(db_chat)
