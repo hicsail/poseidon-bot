@@ -112,7 +112,7 @@ def get_messages(chat_id: str, q: str = None):
 @app.get("/chats")
 def get_chats(db: Session = Depends(get_db)):
     chats = crud.get_chats(db)
-    return {"title" : chats[0].title}
+    return {"chat_title": chats[0].title + chats[1].title}
 
 @app.post("/chats/{chat_id}")
 def create_message(input: ChatInput, db: Session = Depends(get_db)):

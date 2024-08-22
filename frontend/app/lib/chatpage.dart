@@ -139,6 +139,7 @@ Future<void> _handleSubmitted(String text) async {
           var chat = _Chat.fromJson(json);
           print(_Chat.fromJson(json));
           _chatSessions.add(chat);
+          print(_chatSessions);
         } else {
           // If the server did not return a 200 OK response,
           // then throw an exception.
