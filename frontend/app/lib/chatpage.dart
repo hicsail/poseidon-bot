@@ -150,7 +150,7 @@ Future<void> _handleSubmitted(String text) async {
             ),
             for (int i = 0; i < _chatSessions.length; i++)
               ListTile(
-                title: Text('Chat ${i + 1}'),
+                title: Text( _chatSessions[i].title),
                 onTap: () => _switchChat(i),
               ),
             ListTile(
