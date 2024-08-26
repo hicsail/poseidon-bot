@@ -129,22 +129,27 @@ Future<void> _handleSubmitted(String text) async {
         }
   }
 
-  Future<void> handleChatDelete(String chatId) async {
-    final response = await http.delete(Uri.parse('http://localhost:5001/chats/'), 
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'chat_id': chatId,
-        }),
-      );
-        if (response.statusCode == 200) {
-          print('Chat deleted');
-          _loadChats();
-        } else {
-          throw Exception(response.body);
-        }
+Future<void> handleChatDelete(String chatId) async {
+  if (_chatSessions.length > 1) {
+    final response = await http.delete(
+      Uri.parse('http://localhost:5001/chats/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'chat_id': chatId,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print('Chat deleted');
+      _loadChats(); // Reload the chats after deletion
+    } else {
+      throw Exception(response.body);
+    }
+  } else {
+    print('Cannot delete the last remaining chat.');
   }
+}
 
   void _switchChat(int index) {
     setState(() {
