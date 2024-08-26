@@ -8,14 +8,15 @@ from . import models, schemas
 chroma_client = chromadb.HttpClient(host='localhost', port=8000)
 
 
-def add_document(document: str, doc_id: str):
+def add_document(document: str):
     collection = chroma_client.get_or_create_collection(name="my_collection")
-    collection.add(documents=[document], ids=[doc_id])
+    id = str(uuid.uuid4())
+    collection.add(documents=[document], ids=[id])
 
 
 def get_documents():
     collection = chroma_client.get_or_create_collection(name="my_collection")
-    return collection.peek()
+    return collection.get()
 
 
 def get_user(db: Session, user_id: str):
