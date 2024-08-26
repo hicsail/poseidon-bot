@@ -1,21 +1,27 @@
+import 'package:app/widgets/SlideFromRightPageRoute.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:app/settingspage.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:app/homepage.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
   @override
-  ChatPageState createState() => ChatPageState();
+  _ChatPageState createState() => _ChatPageState();
 }
 
 const MainColor = Color.fromARGB(255, 173, 232, 245);
 
-class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin {
-  final List<ChatMessage> messages = [];
-  final ScrollController scrollController = ScrollController();
-  final TextEditingController textController = TextEditingController();
+class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin {
+  final List<_Chat> _chatSessions = [];
+  int _currentChatIndex = 0;
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _controller = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
   late AnimationController controller;
@@ -25,10 +31,11 @@ class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin 
   @override
   void initState() {
     super.initState();
+     _loadChats();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       focusNode.requestFocus();
     });
-    textController.addListener(updateIconOpacity);
+    _controller.addListener(updateIconOpacity);
 
     controller = AnimationController(
       vsync: this,
@@ -45,53 +52,167 @@ class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin 
 
   @override
   void dispose() {
-    textController.removeListener(updateIconOpacity);
-    textController.dispose();
+    _controller.removeListener(updateIconOpacity);
+    _controller.dispose();
     focusNode.dispose();
-    scrollController.dispose();
+    _scrollController.dispose();
     controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadChats() async {
+    var chats = <_Chat>[];
+    final response = await http.get(Uri.parse('http://localhost:5001/chats'),
+     headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },);
+        if (response.statusCode == 200) {
+          var json = jsonDecode(response.body) as List<dynamic>;
+          for(var chat in json) {
+            chats.add(_Chat.fromJson(chat));
+          }
+          setState(() {
+            _chatSessions.clear();
+            _chatSessions.addAll(chats);
+          });
+        } else {
+          throw Exception(response.body);
+        }
   }
 
   void updateIconOpacity() {
     setState(() {}); // Trigger a rebuild to update the icon opacity
   }
 
-  bool get canSend => textController.text.isNotEmpty;
+  bool get canSend => _controller.text.isNotEmpty;
 
-  void handleSubmitted(String text) {
-    if (text.isEmpty) return;
+  Future<void> _handleSubmitted(String text) async {
+  if (text.isEmpty) return;
+  setState(() {
+    _chatSessions[_currentChatIndex].messages.add(_Message(message: text, isUser: true, chatId: _chatSessions[_currentChatIndex].chat_id, id: "0", animationSpeed: Duration(milliseconds: 30)));
+  });
+  _controller.clear();
+  Future.delayed(Duration(milliseconds: 100), () {
+    _scrollToBottom();
+  });
 
-    Duration speed;
-    String botResponse = "This is a simulated bot response.";
-    if (botResponse.length < 100) {
-      speed = Duration(milliseconds: 30);
-    } else {
-      speed = Duration(milliseconds: 5);
+   try {
+       final response = await http.post(Uri.parse('http://localhost:5001/query'), 
+       headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'query': text,
+          'chat_id': _chatSessions[_currentChatIndex].chat_id,
+        }),);
+       var answer = _Message(message: "This is a simulated bot response.", isUser: false, chatId: "0", id:"0", animationSpeed: Duration(milliseconds: 30));
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          var json = jsonDecode(response.body) as Map<String, dynamic>;
+          json['isUser'] = false;
+          answer = _Message.fromJson(json);
+          Duration speed;
+          if (answer.message.length < 100) {
+            speed = Duration(milliseconds: 30);
+          } else {
+            speed = Duration(milliseconds: 5);
+          }
+          answer.animationSpeed = speed;
+          setState(() {
+            // For now, simulate a bot response after a delay.
+            _chatSessions[_currentChatIndex].messages.add(answer);
+          });
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception(response.body);
+        } 
+    } catch (e) {
+      print('Error: $e');
     }
-
-    setState(() {
-      messages.add(ChatMessage(text: text, isUser: true));
-      messages.add(ChatMessage(
-        text: botResponse,
-        isUser: false,
-        isAnimated: true,
-        animationSpeed: speed,
-      ));
-    });
-    textController.clear();
-    Future.delayed(Duration(milliseconds: 100), () {
-      scrollToBottom();
-    });
+    _controller.clear();
     focusNode.requestFocus();
-    print(text);
+
+  Future.delayed(Duration(milliseconds: 100), () {
+      _scrollToBottom();
+  });
+}
+
+  void _startNewChat() async {
+    // setState(() async {
+      final response = await http.post(Uri.parse('http://localhost:5001/chats'), 
+      headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'chat_title': 'Chat ' + (_chatSessions.length+1).toString(),
+          'user_id': 'asdf',
+        }),);
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          var json = jsonDecode(response.body) as Map<String, dynamic>;
+          var chat = _Chat.fromJson(json);
+          _chatSessions.add(chat);
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception(response.body);
+        } setState(() {
+      // For now, simulate a bot response after a delay.
+    });
+      _currentChatIndex = _chatSessions.length - 1;
+    Navigator.pop(context); // Close the drawer
   }
 
-  void scrollToBottom() {
+   Future<void> handleDelete(String messageId) async {
+    final response = await http.delete(Uri.parse('http://localhost:5001/messages/'), 
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'message_id': messageId,
+        }),
+      );
+        if (response.statusCode == 200) {
+          print('Message deleted');
+          _loadChats();
+        } else {
+          throw Exception(response.body);
+        }
+  }
+
+  Future<void> handleChatDelete(String chatId) async {
+    final response = await http.delete(Uri.parse('http://localhost:5001/chats/'), 
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'chat_id': chatId,
+        }),
+      );
+        if (response.statusCode == 200) {
+          print('Chat deleted');
+          _loadChats();
+        } else {
+          throw Exception(response.body);
+        }
+  }
+
+  void _switchChat(int index) {
+    setState(() {
+      _currentChatIndex = index;
+    });
+    Navigator.pop(context); // Close the drawer
+    _scrollToBottom();
+  }
+
+  void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
@@ -130,7 +251,45 @@ class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin 
             icon: const Icon(Icons.menu),
             onPressed: toggleMenu,
           ),
+          IconButton(
+            icon: const Icon(Icons.home),
+            iconSize: 25,
+            onPressed: () {
+              Navigator.push(context, SlideFromRightPageRoute(widget: const MyHomePage(title:"Home")));
+            },
+            alignment: FractionalOffset.topRight,
+        ),
         ],
+      ),
+       drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 129, 241, 194),
+              ),
+              child: Text(
+                'All Chats',
+                style: TextStyle(color: Color.fromARGB(192, 115, 115, 115), fontSize: 24),
+              ),
+            ),
+            for (int i = 0; i < _chatSessions.length; i++)
+              ListTile(
+                title: Text( _chatSessions[i].title),
+                onTap: () => _switchChat(i),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => handleChatDelete(_chatSessions[i].chat_id),
+                ),
+              ),
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: const Text('New Chat'),
+              onTap: _startNewChat,
+            ),
+          ],
+        ),
       ),
       body: Stack(
         children: <Widget>[
@@ -140,18 +299,39 @@ class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin 
                 child: Padding(
                   padding: EdgeInsets.only(bottom: messageBarHeight),
                   child: ListView.builder(
-                    controller: scrollController,
+                    controller: _scrollController,
                     padding: const EdgeInsets.all(8.0),
-                    itemCount: messages.length,
+                    itemCount: _chatSessions[_currentChatIndex].messages.length,
                     itemBuilder: (context, index) {
-                      return ChatMessageWidget(
-                        message: messages[index],
-                        onAnimationFinished: () {
-                          if (!messages[index].isUser) {
+                      return Column (
+                  children: [
+                    _MessageWidget(
+                      message: _chatSessions[_currentChatIndex].messages[index],
+                      onAnimationFinished: () {
+                          if (!_chatSessions[_currentChatIndex].messages[index].isUser) {
                             // Handle animation finished for bot messages if needed
                           }
                         },
-                      );
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment:
+                          _chatSessions[_currentChatIndex].messages[index].isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                      children: <Widget>[
+                    Container(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            iconSize: 25,
+                            onPressed: () => handleDelete(_chatSessions[_currentChatIndex].messages[index].id),
+                            alignment: _chatSessions[_currentChatIndex].messages[index].isUser ? FractionalOffset.topLeft : FractionalOffset.topRight,
+                        ),
+                      ),
+                    ),
+                    ],
+                    ),
+                  ],);
                     },
                   ),
                 ),
@@ -164,7 +344,7 @@ class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin 
                       Expanded(
                         child: TextField(
                           focusNode: focusNode,
-                          controller: textController,
+                          controller: _controller,
                           decoration: InputDecoration(
                             hintText: 'Message Poseidon-Bot',
                             border: OutlineInputBorder(
@@ -186,7 +366,7 @@ class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin 
                           textInputAction: TextInputAction.send,
                           onSubmitted: (text) {
                             if (text.isNotEmpty) {
-                              handleSubmitted(text);
+                              _handleSubmitted(text);
                             }
                           },
                         ),
@@ -203,7 +383,7 @@ class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin 
                             ),
                             iconSize: 40.0,
                             onPressed: canSend ? () {
-                              handleSubmitted(textController.text);
+                              _handleSubmitted(_controller.text);
                             } : null,
                             highlightColor: MainColor,
                             hoverColor: Colors.transparent,
@@ -255,31 +435,60 @@ class ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin 
   }
 }
 
-class ChatMessage {
-  final String text;
-  final bool isUser;
-  final bool isAnimated;
-  final Duration? animationSpeed;
-  bool hasBeenAnimated;
 
-  ChatMessage({
-    required this.text,
-    required this.isUser,
-    this.isAnimated = false,
-    this.animationSpeed,
-    this.hasBeenAnimated = false,
-  });
+class _Chat {
+  List<_Message> messages;
+  String title;
+  String owner_id;
+  String chat_id;
+
+  _Chat({required this.messages, required this.title, required this.owner_id, required this.chat_id});
+
+  Map<String, dynamic> toJson() => {
+        'messages': messages.map((msg) => msg.toJson()).toList(),
+        'chat_title': title,
+        'user_id': owner_id,
+      };
+  
+  factory _Chat.fromJson(Map<String, dynamic> json) => _Chat(
+        messages: json['messages'].map<_Message>((msg) => _Message.fromJson(msg)).toList(),
+        title: json['title'],
+        owner_id: json['owner_id'],
+        chat_id: json['chat_id'],
+      );
 }
 
-class ChatMessageWidget extends StatelessWidget {
-  final ChatMessage message;
+class _Message {
+  final String message;
+  final bool isUser;
+  final String chatId;
+  final String id;
+  final bool isAnimated = false;
+  Duration? animationSpeed;
+  bool hasBeenAnimated = false;
+
+  _Message({required this.message, required this.isUser, required this.chatId, required this.id, required this.animationSpeed});
+
+  Map<String, dynamic> toJson() => {
+        'message': message,
+        'isUser': isUser,
+        'chat_id': chatId,
+      };
+
+  factory _Message.fromJson(Map<String, dynamic> json) => _Message(
+        message: json['message'],
+        chatId: json['chat_id'],
+        isUser: json['typeOfMessage'] == 'user',
+        id: json['id'],
+        animationSpeed: Duration(milliseconds:30),
+      );
+}
+
+class _MessageWidget extends StatelessWidget {
+  final _Message message;
   final VoidCallback? onAnimationFinished;
 
-  const ChatMessageWidget({
-    required this.message,
-    this.onAnimationFinished,
-  });
-
+  const _MessageWidget({required this.message, this.onAnimationFinished});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -315,7 +524,7 @@ class ChatMessageWidget extends StatelessWidget {
                   ),
                   child: message.hasBeenAnimated
                     ? Text(
-                        message.text,
+                        message.message,
                         style: TextStyle(
                           color: message.isUser ? Colors.white : Colors.black87,
                         ),
@@ -330,14 +539,14 @@ class ChatMessageWidget extends StatelessWidget {
                         },
                         animatedTexts: [
                           TyperAnimatedText(
-                            message.text,
+                            message.message,
                             speed: message.animationSpeed ?? Duration(milliseconds: 50),
                           ),
                         ],
                       ),
                 )
               : Text(
-                  message.text,
+                  message.message,
                   style: TextStyle(
                     color: message.isUser ? Colors.black87 : Colors.black87,
                   ),

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:app/chatpage.dart';
-import 'package:app/widgets/PoseidonAppBar.dart';
+import 'package:app/homepage.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,17 +14,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Poseidon Bot',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 245, 186, 173),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
         useMaterial3: true,
       ),
-      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => SlidingMenuApp(), // Use SlidingMenuApp as the home
+        // '/': (context) => const MyHomePage(title: 'Home'),
         '/chat': (context) => const ChatPage(),
       },
+      debugShowCheckedModeBanner: false,
+      home: const MyHomePage(title: 'Home'),
     );
   }
 }
