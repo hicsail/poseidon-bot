@@ -89,7 +89,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   Future<void> _handleSubmitted(String text) async {
   if (text.isEmpty) return;
   setState(() {
-    _chatSessions[_currentChatIndex].messages.add(_Message(message: text, isUser: true, chatId: _chatSessions[_currentChatIndex].chat_id, id: "0", animationSpeed: Duration(milliseconds: 30)));
+    _chatSessions[_currentChatIndex].messages.add(_Message(message: text, isUser: true, chatId: _chatSessions[_currentChatIndex].chat_id, id: "0", animationSpeed: Duration(milliseconds: 30), isAnimated: false));
   });
   _controller.clear();
   Future.delayed(Duration(milliseconds: 100), () {
@@ -105,7 +105,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
           'query': text,
           'chat_id': _chatSessions[_currentChatIndex].chat_id,
         }),);
-       var answer = _Message(message: "This is a simulated bot response.", isUser: false, chatId: "0", id:"0", animationSpeed: Duration(milliseconds: 30));
+       var answer = _Message(message: "This is a simulated bot response.", isUser: false, chatId: "0", id:"0", animationSpeed: Duration(milliseconds: 30), isAnimated: false);
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response,
           // then parse the JSON.
@@ -116,9 +116,10 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
           if (answer.message.length < 100) {
             speed = Duration(milliseconds: 30);
           } else {
-            speed = Duration(milliseconds: 5);
+            speed = Duration(milliseconds: 30);
           }
           answer.animationSpeed = speed;
+          answer.isAnimated = true;
           setState(() {
             // For now, simulate a bot response after a delay.
             _chatSessions[_currentChatIndex].messages.add(answer);
@@ -463,11 +464,11 @@ class _Message {
   final bool isUser;
   final String chatId;
   final String id;
-  final bool isAnimated = false;
+  bool isAnimated = false;
   Duration? animationSpeed;
   bool hasBeenAnimated = false;
 
-  _Message({required this.message, required this.isUser, required this.chatId, required this.id, required this.animationSpeed});
+  _Message({required this.message, required this.isUser, required this.chatId, required this.id, required this.animationSpeed, required this.isAnimated});
 
   Map<String, dynamic> toJson() => {
         'message': message,
@@ -481,6 +482,7 @@ class _Message {
         isUser: json['typeOfMessage'] == 'user',
         id: json['id'],
         animationSpeed: Duration(milliseconds:30),
+        isAnimated: false,
       );
 }
 
