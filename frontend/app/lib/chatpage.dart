@@ -129,10 +129,9 @@ Future<void> _handleSubmitted(String text) async {
         }
   }
 
-Future<void> handleChatDelete(String chatId) async {
+  Future<void> handleChatDelete(String chatId) async {
   if (_chatSessions.length > 1) {
-    final response = await http.delete(
-      Uri.parse('http://localhost:5001/chats/'),
+    final response = await http.delete(Uri.parse('http://localhost:5001/chats/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -148,6 +147,9 @@ Future<void> handleChatDelete(String chatId) async {
     }
   } else {
     print('Cannot delete the last remaining chat.');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Cannot delete the last remaining chat.')),
+    );
   }
 }
 
