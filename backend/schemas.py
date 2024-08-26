@@ -1,8 +1,9 @@
+from typing import Union
 from pydantic import BaseModel
 
 class MessageBase(BaseModel):
     chat_id: str
-    message: str | None
+    message: Union[str, None]
 
 
 class MessageCreate(MessageBase):

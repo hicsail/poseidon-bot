@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from typing import Union
+from typing import List
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -56,13 +56,16 @@ class DeleteMessageInput(BaseModel):
 
 class DeleteChatInput(BaseModel):
     chat_id: str
+
+class DocumentInput(BaseModel):
+    document: List[str]
  
 @app.post('/query')
 def query(input: Input, db: Session = Depends(get_db)):
     try:
         chroma_result = collection.query(
             query_texts=input.query,
-            n_results=2
+            n_results=len(crud.get_documents()),
         )
 
         messages = []
@@ -82,6 +85,7 @@ def query(input: Input, db: Session = Depends(get_db)):
             'content': input.query,
         })
         print(messages)
+        print("HIIIi")
         ollama_result = ollama.chat(
             model='llama3.1',
             messages=messages,
@@ -123,9 +127,16 @@ async def lifespan(app: FastAPI):
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/")
-def get_root():
-    return {"Hello": "World"}
+@app.post("/document")
+def create_document(input: DocumentInput):
+    for document in input.document:
+        id = str(uuid.uuid4())
+        collection.add(documents=[document], ids=[id])
+    return {"document": input.document}
+
+@app.get("/document")
+def get_document():
+    return {"document": str(crud.get_documents())}
 
 @app.get("/chats/{chat_id}")
 def get_messages(chat_id: str):
