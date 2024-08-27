@@ -1,0 +1,5 @@
+SQLAlchemy==2.0.32
+typing_extensions==4.12.2
+fastapi==0.112.2
+pydantic==2.8.2
+chromadb==0.5.5
