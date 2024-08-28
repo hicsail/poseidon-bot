@@ -2,6 +2,9 @@ from typing import Union
 from pydantic import BaseModel
 
 class MessageBase(BaseModel):
+    title: str
+    # message: str | None = None
+    # typeOfMessage: str | None = None
     chat_id: str
     message: Union[str, None]
 
