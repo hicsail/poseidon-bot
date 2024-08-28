@@ -2,9 +2,8 @@ import 'dart:convert';
 import 'package:app/homepage.dart';
 import 'package:app/widgets/SlideFromRightPageRoute.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:app/settingspage.dart';
 import 'package:http/http.dart' as http;
+import 'package:app/settingspage.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -18,8 +17,8 @@ const MainColor = Color.fromARGB(255, 173, 232, 245);
 class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin {
   final List<_Chat> _chatSessions = [];
   int _currentChatIndex = 0;
-  final ScrollController _scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
 
   late AnimationController controller;
@@ -59,7 +58,6 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   }
 
   Future<void> _loadChats() async {
-    var chats = <_Chat>[];
     final response = await http.get(
       Uri.parse('http://localhost:5001/chats'),
       headers: <String, String>{
@@ -68,12 +66,11 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
     );
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body) as List<dynamic>;
-      for (var chat in json) {
-        chats.add(_Chat.fromJson(chat));
-      }
+      final chats = json.map((chat) => _Chat.fromJson(chat)).toList();
       setState(() {
-        _chatSessions.clear();
-        _chatSessions.addAll(chats);
+        _chatSessions
+          ..clear()
+          ..addAll(chats);
       });
     } else {
       throw Exception(response.body);
@@ -100,9 +97,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
       );
     });
     _controller.clear();
-    Future.delayed(Duration(milliseconds: 100), () {
-      _scrollToBottom();
-    });
+    Future.delayed(Duration(milliseconds: 100), _scrollToBottom);
 
     try {
       final response = await http.post(
@@ -123,13 +118,12 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
         animationSpeed: Duration(milliseconds: 30),
       );
       if (response.statusCode == 200) {
-        var json = jsonDecode(response.body) as Map<String, dynamic>;
+        final json = jsonDecode(response.body) as Map<String, dynamic>;
         json['isUser'] = false;
         answer = _Message.fromJson(json);
-        Duration speed = answer.message.length < 100
+        answer.animationSpeed = answer.message.length < 100
             ? Duration(milliseconds: 30)
             : Duration(milliseconds: 5);
-        answer.animationSpeed = speed;
         setState(() {
           _chatSessions[_currentChatIndex].messages.add(answer);
         });
@@ -142,9 +136,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
     _controller.clear();
     focusNode.requestFocus();
 
-    Future.delayed(Duration(milliseconds: 100), () {
-      _scrollToBottom();
-    });
+    Future.delayed(Duration(milliseconds: 100), _scrollToBottom);
   }
 
   Future<void> _startNewChat() async {
@@ -159,10 +151,12 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
       }),
     );
     if (response.statusCode == 200) {
-      var json = jsonDecode(response.body) as Map<String, dynamic>;
-      var chat = _Chat.fromJson(json);
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      final chat = _Chat.fromJson(json);
       setState(() {
-        _chatSessions.add(chat);
+        _chatSessions
+          ..add(chat)
+          ..length;
         _currentChatIndex = _chatSessions.length - 1;
       });
       Navigator.pop(context); // Close the drawer
@@ -247,7 +241,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final messageBarHeight = 5.0;
+    final messageBarHeight = 60.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -274,7 +268,6 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
                 SlideFromRightPageRoute(widget: const MyHomePage(title: "Home")),
               );
             },
-            alignment: FractionalOffset.topRight,
           ),
         ],
       ),
@@ -320,9 +313,9 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
                     itemCount: _chatSessions[_currentChatIndex].messages.length,
                     itemBuilder: (context, index) {
                       final message = _chatSessions[_currentChatIndex].messages[index];
-                      return ListTile(
-                        title: Text(message.message),
-                        subtitle: Text(message.isUser ? 'User' : 'Bot'),
+                      return _MessageWidget(
+                        message: message,
+                        onDelete: () => handleDelete(message.id),
                       );
                     },
                   ),
@@ -330,29 +323,8 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
               ),
               Container(
                 height: messageBarHeight,
-                color: Colors.grey[200],
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: TextField(
-                          controller: _controller,
-                          focusNode: focusNode,
-                          onSubmitted: _handleSubmitted,
-                          decoration: const InputDecoration(
-                            hintText: 'Type a message...',
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: canSend ? () => _handleSubmitted(_controller.text) : null,
-                    ),
-                  ],
-                ),
+                color: MainColor,
+                child: _buildMessageInput(),
               ),
             ],
           ),
@@ -380,9 +352,33 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
       ),
     );
   }
+
+  Widget _buildMessageInput() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextField(
+              controller: _controller,
+              focusNode: focusNode,
+              onSubmitted: _handleSubmitted,
+              decoration: const InputDecoration(
+                hintText: 'Type a message...',
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.send),
+          onPressed: canSend ? () => _handleSubmitted(_controller.text) : null,
+        ),
+      ],
+    );
+  }
 }
 
-// Placeholder for _Chat and _Message classes
 class _Chat {
   final String chat_id;
   final String title;
@@ -395,12 +391,12 @@ class _Chat {
   });
 
   factory _Chat.fromJson(Map<String, dynamic> json) {
-    var messagesJson = json['messages'] as List<dynamic>;
-    var messages = messagesJson.map<_Message>((msg) => _Message.fromJson(msg)).toList();
+    var messagesFromJson = json['messages'] as List;
+    List<_Message> messagesList = messagesFromJson.map((i) => _Message.fromJson(i)).toList();
     return _Chat(
-      chat_id: json['chat_id'] as String,
-      title: json['title'] as String,
-      messages: messages,
+      chat_id: json['chat_id'],
+      title: json['chat_title'],
+      messages: messagesList,
     );
   }
 }
@@ -410,23 +406,48 @@ class _Message {
   final String message;
   final bool isUser;
   final String chatId;
-  Duration animationSpeed;
+  late Duration animationSpeed;
 
   _Message({
-    required this.id,
     required this.message,
     required this.isUser,
     required this.chatId,
+    required this.id,
     required this.animationSpeed,
   });
 
   factory _Message.fromJson(Map<String, dynamic> json) {
     return _Message(
-      id: json['id'] as String,
-      message: json['message'] as String,
-      isUser: json['isUser'] as bool,
-      chatId: json['chatId'] as String,
-      animationSpeed: Duration(milliseconds: json['animationSpeed'] as int),
+      id: json['id'],
+      message: json['message'],
+      isUser: json['isUser'],
+      chatId: json['chat_id'],
+      animationSpeed: Duration(milliseconds: 30), // Default speed
+    );
+  }
+}
+
+class _MessageWidget extends StatelessWidget {
+  final _Message message;
+  final VoidCallback onDelete;
+
+  const _MessageWidget({
+    Key? key,
+    required this.message,
+    required this.onDelete,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(message.message),
+      subtitle: message.isUser ? null : const Text('Bot'),
+      trailing: message.isUser
+          ? IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: onDelete,
+            )
+          : null,
     );
   }
 }

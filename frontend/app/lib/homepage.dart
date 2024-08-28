@@ -43,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // platformFile.readStream!.listen((value) {
         //   print(value);
         // });
+        
         // For web, we cannot access the file path, so we'll use the bytes and name
         setState(() {
           List<int> bytes = platformFile.bytes!;
