@@ -550,7 +550,7 @@ class _MessageWidget extends StatelessWidget {
                     ? Text(
                         message.message,
                         style: TextStyle(
-                          color: message.isUser ? Colors.white : Colors.black87,
+                          color: Colors.black87,
                         ),
                       )
                     : isNewest && !message.hasAnimated
