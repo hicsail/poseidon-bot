@@ -460,17 +460,21 @@ class _Message {
   final bool isUser;
   final String chatId;
   final String id;
+  bool hasAnimated;
 
-  _Message(
-      {required this.message,
-      required this.isUser,
-      required this.chatId,
-      required this.id});
+  _Message({
+    required this.message,
+    required this.isUser,
+    required this.chatId,
+    required this.id,
+    this.hasAnimated = false,
+  });
 
   Map<String, dynamic> toJson() => {
         'message': message,
         'isUser': isUser,
         'chat_id': chatId,
+        'hasAnimated': hasAnimated,
       };
 
   factory _Message.fromJson(Map<String, dynamic> json) => _Message(
@@ -478,8 +482,10 @@ class _Message {
         chatId: json['chat_id'],
         isUser: json['typeOfMessage'] == 'user',
         id: json['id'],
+        hasAnimated: json['hasAnimated'] ?? false,
       );
 }
+
 
 class _Chat {
   List<_Message> messages;
@@ -508,7 +514,6 @@ class _Chat {
         chat_id: json['chat_id'],
       );
 }
-
 class _MessageWidget extends StatelessWidget {
   final _Message message;
   final bool isNewest;
@@ -528,8 +533,8 @@ class _MessageWidget extends StatelessWidget {
             children: <Widget>[
               if (!message.isUser)
                 const CircleAvatar(
-                  child: Text('AI'),
-                  backgroundColor: Colors.grey,
+                  child: Text('🔱'),
+                  backgroundColor: Colors.transparent,
                 ),
               if (!message.isUser) const SizedBox(width: 8.0),
               Container(
@@ -538,7 +543,7 @@ class _MessageWidget extends StatelessWidget {
                     maxWidth: MediaQuery.of(context).size.width * 0.75),
                 decoration: BoxDecoration(
                   color:
-                      message.isUser ? Colors.blueAccent : Colors.grey[300],
+                      message.isUser ?   Colors.grey[300]: MainColor,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: message.isUser
@@ -548,7 +553,7 @@ class _MessageWidget extends StatelessWidget {
                           color: message.isUser ? Colors.white : Colors.black87,
                         ),
                       )
-                    : isNewest
+                    : isNewest && !message.hasAnimated
                         ? AnimatedTextKit(
                             isRepeatingAnimation: false,
                             animatedTexts: [
@@ -560,6 +565,10 @@ class _MessageWidget extends StatelessWidget {
                                 speed: const Duration(milliseconds: 10),
                               ),
                             ],
+                            onFinished: () {
+                              // Mark the message as having been animated
+                              message.hasAnimated = true;
+                            },
                           )
                         : Text(
                             message.message,
@@ -569,11 +578,11 @@ class _MessageWidget extends StatelessWidget {
                           ),
               ),
               if (message.isUser) const SizedBox(width: 8.0),
-              if (message.isUser)
-                const CircleAvatar(
-                  child: Text('U'),
-                  backgroundColor: Colors.blueAccent,
-                ),
+              // if (message.isUser)
+              //   const CircleAvatar(
+              //     child: Text('U'),
+              //     backgroundColor: Colors.blueAccent,
+              //   ),
             ],
           ),
         ],
