@@ -84,7 +84,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   bool get canSend => _controller.text.isNotEmpty;
 
   Future<void> _handleSubmitted(String text) async {
-    if (text.isEmpty) return;
+    if (text.isEmpty || _chatSessions.isEmpty) return;
     setState(() {
       _chatSessions[_currentChatIndex].messages.add(
         _Message(
@@ -92,12 +92,11 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
           isUser: true,
           chatId: _chatSessions[_currentChatIndex].chat_id,
           id: "0",
-          animationSpeed: Duration(milliseconds: 30),
         ),
       );
     });
     _controller.clear();
-    Future.delayed(Duration(milliseconds: 100), _scrollToBottom);
+    _scrollToBottom();
 
     try {
       final response = await http.post(
@@ -115,15 +114,11 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
         isUser: false,
         chatId: "0",
         id: "0",
-        animationSpeed: Duration(milliseconds: 30),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         json['isUser'] = false;
         answer = _Message.fromJson(json);
-        answer.animationSpeed = answer.message.length < 100
-            ? Duration(milliseconds: 30)
-            : Duration(milliseconds: 5);
         setState(() {
           _chatSessions[_currentChatIndex].messages.add(answer);
         });
@@ -136,7 +131,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
     _controller.clear();
     focusNode.requestFocus();
 
-    Future.delayed(Duration(milliseconds: 100), _scrollToBottom);
+    _scrollToBottom();
   }
 
   Future<void> _startNewChat() async {
@@ -246,13 +241,9 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MainColor,
-        title: Center(
-          child: Text(
-            'Poseidon-Bot',
-            style: TextStyle(
-              fontSize: 20,
-            ),
-          ),
+        title: const Text(
+          'Poseidon Bot',
+          style: TextStyle(color: Colors.white),
         ),
         actions: [
           IconButton(
@@ -284,14 +275,20 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
                 style: TextStyle(color: Color.fromARGB(192, 115, 115, 115), fontSize: 24),
               ),
             ),
-            for (int i = 0; i < _chatSessions.length; i++)
-              ListTile(
-                title: Text(_chatSessions[i].title),
-                onTap: () => _switchChat(i),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => handleChatDelete(_chatSessions[i].chat_id),
-                ),
+            if (_chatSessions.isNotEmpty)
+              ...List.generate(_chatSessions.length, (i) {
+                return ListTile(
+                  title: Text(_chatSessions[i].title),
+                  onTap: () => _switchChat(i),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => handleChatDelete(_chatSessions[i].chat_id),
+                  ),
+                );
+              }),
+            if (_chatSessions.isEmpty)
+              const Center(
+                child: Text('No chat sessions available'),
               ),
             ListTile(
               leading: const Icon(Icons.add),
@@ -301,55 +298,59 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
           ],
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: _chatSessions[_currentChatIndex].messages.length,
-                    itemBuilder: (context, index) {
-                      final message = _chatSessions[_currentChatIndex].messages[index];
-                      return _MessageWidget(
-                        message: message,
-                        onDelete: () => handleDelete(message.id),
-                      );
-                    },
+      body: _chatSessions.isNotEmpty
+          ? Stack(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: _chatSessions[_currentChatIndex].messages.length,
+                          itemBuilder: (context, index) {
+                            final message = _chatSessions[_currentChatIndex].messages[index];
+                            return _MessageWidget(
+                              message: message,
+                              onDelete: () => handleDelete(message.id),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: messageBarHeight,
+                      color: MainColor,
+                      child: _buildMessageInput(),
+                    ),
+                  ],
+                ),
+                SlideTransition(
+                  position: slideAnimation,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    color: Colors.grey[200],
+                    child: ListView(
+                      children: <Widget>[
+                        ListTile(
+                          title: const Text('Settings'),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              SlideFromRightPageRoute(widget: const SettingsPage()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                height: messageBarHeight,
-                color: MainColor,
-                child: _buildMessageInput(),
-              ),
-            ],
-          ),
-          SlideTransition(
-            position: slideAnimation,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.75,
-              color: Colors.grey[200],
-              child: ListView(
-                children: <Widget>[
-                  ListTile(
-                    title: const Text('Settings'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        SlideFromRightPageRoute(widget: const SettingsPage()),
-                      );
-                    },
-                  ),
-                ],
-              ),
+              ],
+            )
+          : const Center(
+              child: Text('No chat sessions available'),
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -372,9 +373,32 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
         ),
         IconButton(
           icon: const Icon(Icons.send),
-          onPressed: canSend ? () => _handleSubmitted(_controller.text) : null,
+          onPressed: canSend && _chatSessions.isNotEmpty ? () => _handleSubmitted(_controller.text) : null,
         ),
       ],
+    );
+  }
+}
+
+class _Message {
+  final String id;
+  final String message;
+  final bool isUser;
+  final String chatId;
+
+  _Message({
+    required this.message,
+    required this.isUser,
+    required this.chatId,
+    required this.id,
+  });
+
+  factory _Message.fromJson(Map<String, dynamic> json) {
+    return _Message(
+      id: json['id'],
+      message: json['message'],
+      isUser: json['isUser'],
+      chatId: json['chat_id'],
     );
   }
 }
@@ -401,32 +425,6 @@ class _Chat {
   }
 }
 
-class _Message {
-  final String id;
-  final String message;
-  final bool isUser;
-  final String chatId;
-  late Duration animationSpeed;
-
-  _Message({
-    required this.message,
-    required this.isUser,
-    required this.chatId,
-    required this.id,
-    required this.animationSpeed,
-  });
-
-  factory _Message.fromJson(Map<String, dynamic> json) {
-    return _Message(
-      id: json['id'],
-      message: json['message'],
-      isUser: json['isUser'],
-      chatId: json['chat_id'],
-      animationSpeed: Duration(milliseconds: 30), // Default speed
-    );
-  }
-}
-
 class _MessageWidget extends StatelessWidget {
   final _Message message;
   final VoidCallback onDelete;
@@ -439,15 +437,53 @@ class _MessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(message.message),
-      subtitle: message.isUser ? null : const Text('Bot'),
-      trailing: message.isUser
-          ? IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: onDelete,
-            )
-          : null,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment:
+                message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children: <Widget>[
+              if (!message.isUser)
+                const CircleAvatar(
+                  child: Text('AI'),
+                  backgroundColor: Colors.grey,
+                ),
+              if (!message.isUser) const SizedBox(width: 8.0),
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                decoration: BoxDecoration(
+                  color: message.isUser ? Colors.blueAccent : Colors.grey[300],
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Text(
+                  message.message,
+                  style: TextStyle(
+                    color: message.isUser ? Colors.white : Colors.black87,
+                  ),
+                ),
+              ),
+              if (message.isUser) const SizedBox(width: 8.0),
+              if (message.isUser)
+                const CircleAvatar(
+                  child: Text('U'),
+                  backgroundColor: Colors.blueAccent,
+                ),
+            ],
+          ),
+          if (message.isUser)
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: onDelete,
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
