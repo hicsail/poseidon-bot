@@ -1,56 +1,43 @@
-from typing import Union
+from typing import Union, List
 from pydantic import BaseModel
 
 class MessageBase(BaseModel):
-    title: str
-    # message: str | None = None
-    # typeOfMessage: str | None = None
     chat_id: str
-    message: Union[str, None]
-
+    message: Union[str, None]  # This allows message to be either a string or None
 
 class MessageCreate(MessageBase):
-    chat_id: str
-    message: str
-
+    message: str  # Ensures message is required for creation
 
 class Message(MessageBase):
-    id: str
-    chat_id: str
+    id: str  # Includes the message ID
 
     class Config:
-        orm_mode = True
+        orm_mode = True  # Allows compatibility with SQLAlchemy models
 
 class ChatBase(BaseModel):
     title: str
 
-
 class ChatCreate(ChatBase):
-    title: str
-    userId: str
-
+    userId: str  # User ID for creating a chat
 
 class Chat(ChatBase):
-    id: str
-    owner_id: str
-    messages: list[Message] = []
+    id: str  # Includes chat ID
+    owner_id: str  # Owner's user ID
+    messages: List[Message] = []  # List of associated messages
 
     class Config:
-        orm_mode = True
-
+        orm_mode = True  # Allows compatibility with SQLAlchemy models
 
 class UserBase(BaseModel):
     email: str
 
-
 class UserCreate(UserBase):
-    password: str
-
+    password: str  # Password is required for user creation
 
 class User(UserBase):
-    id: str
-    is_active: bool
-    chats: list[Chat] = []
+    id: str  # Includes user ID
+    is_active: bool  # Indicates if the user is active
+    chats: List[Chat] = []  # List of associated chats
 
     class Config:
-        orm_mode = True
+        orm_mode = True  # Allows compatibility with SQLAlchemy models
