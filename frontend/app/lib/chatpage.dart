@@ -308,48 +308,48 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: messageBarHeight),
-                  child: ListView.builder(
-                    controller: scrollController,
-                    padding: const EdgeInsets.all(8.0),
-                    itemCount: _chatSessions[_currentChatIndex].messages.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          _MessageWidget(
-                            message: _chatSessions[_currentChatIndex].messages[index],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: _chatSessions[_currentChatIndex]
-                                    .messages[index]
-                                    .isUser
-                                ? MainAxisAlignment.end
-                                : MainAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    iconSize: 25,
-                                    onPressed: () => handleDelete(
-                                        _chatSessions[_currentChatIndex]
-                                            .messages[index]
-                                            .id),
-                                    alignment: _chatSessions[_currentChatIndex]
-                                            .messages[index]
-                                            .isUser
-                                        ? FractionalOffset.topLeft
-                                        : FractionalOffset.topRight,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    },
+                child: ListView.builder(
+  controller: scrollController,
+  padding: const EdgeInsets.all(8.0),
+  itemCount: _chatSessions[_currentChatIndex].messages.length,
+  itemBuilder: (context, index) {
+    final isNewest = index == _chatSessions[_currentChatIndex].messages.length - 1 &&
+                     !_chatSessions[_currentChatIndex].messages[index].isUser;
+                     
+    return Column(
+      children: [
+        _MessageWidget(
+          message: _chatSessions[_currentChatIndex].messages[index],
+          isNewest: isNewest,
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: _chatSessions[_currentChatIndex].messages[index].isUser
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.delete),
+                  iconSize: 25,
+                  onPressed: () => handleDelete(
+                    _chatSessions[_currentChatIndex].messages[index].id
                   ),
+                  alignment: _chatSessions[_currentChatIndex].messages[index].isUser
+                      ? FractionalOffset.topLeft
+                      : FractionalOffset.topRight,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  },
+),
+
                 ),
               ),
               SafeArea(
@@ -511,8 +511,10 @@ class _Chat {
 
 class _MessageWidget extends StatelessWidget {
   final _Message message;
+  final bool isNewest;
 
-  const _MessageWidget({required this.message});
+  const _MessageWidget({required this.message, required this.isNewest});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -539,12 +541,32 @@ class _MessageWidget extends StatelessWidget {
                       message.isUser ? Colors.blueAccent : Colors.grey[300],
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: Text(
-                  message.message,
-                  style: TextStyle(
-                    color: message.isUser ? Colors.white : Colors.black87,
-                  ),
-                ),
+                child: message.isUser
+                    ? Text(
+                        message.message,
+                        style: TextStyle(
+                          color: message.isUser ? Colors.white : Colors.black87,
+                        ),
+                      )
+                    : isNewest
+                        ? AnimatedTextKit(
+                            isRepeatingAnimation: false,
+                            animatedTexts: [
+                              TyperAnimatedText(
+                                message.message,
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                ),
+                                speed: const Duration(milliseconds: 10),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            message.message,
+                            style: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
               ),
               if (message.isUser) const SizedBox(width: 8.0),
               if (message.isUser)
