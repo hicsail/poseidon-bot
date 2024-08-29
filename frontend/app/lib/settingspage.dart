@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-
 // Define a placeholder for SideMenuItem and SideMenuExpansionItem
 class SideMenuItem extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
   final Icon icon;
   final Widget badgeContent;
-
   const SideMenuItem({
     required this.title,
     required this.onTap,
     required this.icon,
     required this.badgeContent,
   });
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -24,18 +21,15 @@ class SideMenuItem extends StatelessWidget {
     );
   }
 }
-
 class SideMenuExpansionItem extends StatelessWidget {
   final String title;
   final Icon icon;
   final List<SideMenuItem> children;
-
   const SideMenuExpansionItem({
     required this.title,
     required this.icon,
     required this.children,
   });
-
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
@@ -45,10 +39,8 @@ class SideMenuExpansionItem extends StatelessWidget {
     );
   }
 }
-
 class SettingsPage extends StatelessWidget {
   const SettingsPage();
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
@@ -57,10 +49,8 @@ class SettingsPage extends StatelessWidget {
     );
   }
 }
-
 class Body extends StatelessWidget {
   const Body();
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -81,7 +71,6 @@ class Body extends StatelessWidget {
     );
   }
 }
-
 class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -91,7 +80,6 @@ class AccountScreen extends StatelessWidget {
     );
   }
 }
-
 class ThemeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -111,7 +99,6 @@ class ThemeScreen extends StatelessWidget {
     );
   }
 }
-
 class AccountInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -121,7 +108,6 @@ class AccountInformation extends StatelessWidget {
     );
   }
 }
-
 class PrivacySettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -131,10 +117,8 @@ class PrivacySettings extends StatelessWidget {
     );
   }
 }
-
 class ListItem extends StatelessWidget {
   const ListItem();
-
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -207,11 +191,9 @@ class ListItem extends StatelessWidget {
     );
   }
 }
-
 // Uncomment if you need PageButton
 // class PageButton extends StatelessWidget {
 //   const PageButton();
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return SafeArea(

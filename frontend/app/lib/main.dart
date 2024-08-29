@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app/chatpage.dart';
 import 'package:app/widgets/PoseidonAppBar.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Poseidon Bot',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 124, 77, 255),
+          seedColor: const Color.fromARGB(255, 245, 186, 173),
         ),
         useMaterial3: true,
       ),
